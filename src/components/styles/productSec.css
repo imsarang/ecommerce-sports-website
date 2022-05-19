@@ -1,0 +1,9 @@
+:global(.swiper-pagination){
+    width:100%;
+    /* padding:'100%' */
+}
+:global(.swiper-pagination-bullet-active){
+    background-color: #000;
+    /* border-radius: none; */
+    color:black
+}

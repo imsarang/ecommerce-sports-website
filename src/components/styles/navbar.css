@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Domine:wght@500&family=Josefin+Sans&family=Luckiest+Guy&family=Merriweather&family=Mochiy+Pop+P+One&family=Mulish:wght@300&family=Oswald:wght@300;400&family=Raleway:wght@500&family=Roboto+Condensed:wght@300&family=Roboto+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anybody:wght@300;400&family=Bebas+Neue&family=Coda&family=Domine:wght@500&family=Josefin+Sans&family=Luckiest+Guy&family=Merriweather&family=Mochiy+Pop+P+One&family=Mulish:wght@300&family=Oswald:wght@300;400&family=Raleway:wght@500&family=Roboto+Condensed:wght@300&family=Roboto+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anybody:wght@300;400&family=Bebas+Neue&family=Coda&family=Domine:wght@500&family=Josefin+Sans&family=Luckiest+Guy&family=Merriweather&family=Mochiy+Pop+P+One&family=Mulish:wght@300&family=Oswald:wght@300;400&family=Raleway:wght@500&family=Roboto+Condensed:wght@300&family=Roboto+Slab&family=Share&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anybody:wght@300;400&family=Battambang:wght@300&family=Bebas+Neue&family=Coda&family=Domine:wght@500&family=Josefin+Sans&family=Luckiest+Guy&family=Merriweather&family=Mochiy+Pop+P+One&family=Mulish:wght@300&family=Oswald:wght@300;400&family=Raleway:wght@500&family=Roboto+Condensed:wght@300&family=Roboto+Slab&family=Share&display=swap');
+.nav{
+    width:100%;
+    /* height: 10%; */
+    background:rgb(45, 109, 187);    
+}
+
+#nav-bar{
+    /* padding:40% 0 0 0; */
+    padding-top:7%;
+    color:white;
+    cursor: pointer;
+}
+.nav-bar{
+    padding:5%;
+}
+.navbar-input{
+    background-color: white;
+    border-radius: 10px;
+    margin:1.5% 1% 1% 1%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#nav-in{
+    border:none;
+    width:95%;
+    outline: none;
+    border-radius: 10px;
+}
+
+.nav-bar{
+    align-items: center;
+    text-align: center;
+    /* margin-left:4%; */
+}
+
+.sports{
+    display:block;
+    font-family: 'Bebas Neue';
+    font-size:15px;
+    font-weight: 200;
+    cursor: pointer;
+}
+.navbar-del{
+    display:block;
+    font-family: 'Roboto';
+}
+.navbar-user{
+    display:block;
+    font-family: 'Roboto';
+}
+
+@media screen and(max-width:860px){
+    .nav-bar,.navbar-brand,.navbar-user,.navbar-cart{
+        display:inline-flexbox;
+    }
+}
