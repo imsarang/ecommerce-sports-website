@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/static/css/main.1bf13d33.css",
-    "main.js": "/static/js/main.ca23bfe4.js",
-    "static/media/carouselImg1.png": "/static/media/carouselImg1.0e1979ef0f76a371a09e.png",
-    "static/media/carouselImg2.png": "/static/media/carouselImg2.bac8365a724353f80a3d.png",
-    "static/media/product1.png": "/static/media/product1.fdaa7d805a6773f36f5f.png",
-    "static/media/product2.png": "/static/media/product2.5b5080e381655a01f413.png",
-    "static/media/deca-brand.svg": "/static/media/deca-brand.93051558fb5a24e54a4b35720810dfbf.svg",
-    "static/media/product-idvl.avif": "/static/media/product-idvl.2b37122b3dbcffe80f7f.avif",
-    "static/media/upi.svg": "/static/media/upi.e514579fb480fe17f9eff52ea97d2466.svg",
-    "static/media/net.svg": "/static/media/net.317f64633282c6bcae8962a33ac42a8d.svg",
-    "static/media/credit.svg": "/static/media/credit.7055e5dc3d93473d4560dfd383bac549.svg",
-    "index.html": "/index.html",
-    "static/media/debit.svg": "/static/media/debit.b4e157b6acb2b069fa3b7aaacc0a16e8.svg",
-    "main.1bf13d33.css.map": "/static/css/main.1bf13d33.css.map",
-    "main.ca23bfe4.js.map": "/static/js/main.ca23bfe4.js.map"
+    "main.css": "/sports-website/static/css/main.1bf13d33.css",
+    "main.js": "/sports-website/static/js/main.6b9f8fcb.js",
+    "static/media/carouselImg1.png": "/sports-website/static/media/carouselImg1.0e1979ef0f76a371a09e.png",
+    "static/media/carouselImg2.png": "/sports-website/static/media/carouselImg2.bac8365a724353f80a3d.png",
+    "static/media/product1.png": "/sports-website/static/media/product1.fdaa7d805a6773f36f5f.png",
+    "static/media/product2.png": "/sports-website/static/media/product2.5b5080e381655a01f413.png",
+    "static/media/deca-brand.svg": "/sports-website/static/media/deca-brand.93051558fb5a24e54a4b35720810dfbf.svg",
+    "static/media/product-idvl.avif": "/sports-website/static/media/product-idvl.2b37122b3dbcffe80f7f.avif",
+    "static/media/upi.svg": "/sports-website/static/media/upi.e514579fb480fe17f9eff52ea97d2466.svg",
+    "static/media/net.svg": "/sports-website/static/media/net.317f64633282c6bcae8962a33ac42a8d.svg",
+    "index.html": "/sports-website/index.html",
+    "static/media/credit.svg": "/sports-website/static/media/credit.7055e5dc3d93473d4560dfd383bac549.svg",
+    "static/media/debit.svg": "/sports-website/static/media/debit.b4e157b6acb2b069fa3b7aaacc0a16e8.svg",
+    "main.1bf13d33.css.map": "/sports-website/static/css/main.1bf13d33.css.map",
+    "main.6b9f8fcb.js.map": "/sports-website/static/js/main.6b9f8fcb.js.map"
   },
   "entrypoints": [
     "static/css/main.1bf13d33.css",
-    "static/js/main.ca23bfe4.js"
+    "static/js/main.6b9f8fcb.js"
   ]
 }
