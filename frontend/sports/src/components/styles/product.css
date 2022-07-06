@@ -1,0 +1,23 @@
+.defInfo{
+    cursor:pointer;
+    padding:2%
+}
+#adv:hover{
+    background-color: aliceblue;
+}
+#tech:hover{
+    background-color: aliceblue;
+}
+#rev:hover{
+    background-color: aliceblue;
+}
+.curInfo{
+    padding:2%;
+    background-color: white;
+}
+/* .advantage:active{
+    background-color: gold;
+}
+.advantage:focus{
+    background-color: gold;
+} */

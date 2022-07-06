@@ -1,0 +1,57 @@
+.myaccount{
+    display:flex;
+    width:100%;
+    padding:7%;
+}
+.index{
+    width:30%;
+    /* background-color: red; */
+    padding:1%;
+    font-family: 'Oswald';
+}
+.index-con1,.index-con2{
+    padding:4%;
+    margin:1% 0 1% 0;
+    background-color: #e8e9eb;
+    border-radius: 5px;
+}
+.index-con1:hover{
+    background-color: rgb(183, 181, 181);
+    transition:0.5s;
+}
+.index-con2{
+    background-color: gold;
+}
+.index-item{
+    cursor: pointer;
+    padding:7%
+}
+.index-phone,.index-logout{
+    padding:1% 0 1% 7%;
+}
+.index-logout{
+    cursor: pointer;
+}
+.content{
+    width:100%;
+    padding:1%;
+    font-family: 'Oswald';
+}
+@media screen and (max-width:600px){
+    .myaccount{
+        display:block;
+ 
+        /* padding:40px */
+    }
+    .index-con1,.index-con2{
+        width:100%;
+        /* padding:1% 0 0 2%; */
+    }
+    .index{
+        width:100%;
+        padding:0;
+    }
+    .index-item{
+        padding:2% 0 2% 7%;
+    }
+}

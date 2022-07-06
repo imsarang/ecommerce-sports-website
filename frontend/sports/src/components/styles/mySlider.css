@@ -1,0 +1,103 @@
+.outer-carousel{
+    position:relative;
+    overflow:hidden;
+    padding:1% 4% 4% 4%;
+}
+
+.inner-carousel{
+    display:flex;
+    overflow-x:auto;
+    scroll-behavior: smooth;
+}
+
+.inner-carousel::-webkit-scrollbar{
+    display:none;
+}
+
+.product-card{
+    flex:0 0 auto;
+    /* width:25%; */
+    display:block;
+    border: 2px solid black;
+    border-radius:10px;
+    margin:0 1% 0 0;
+    padding:0.1%;
+    /* margin-right:20px; */
+}
+
+.product-image{
+    position:relative;
+    width:70%;
+    /* max-height:80%; */
+}
+
+.product-image .image{
+    max-width:300px;
+    max-height: 350px;
+    object-fit: fill;
+    border-radius: 10px;
+}
+
+.arrows{
+    display: flex;
+    justify-content: end;
+    padding:0% 4% 0 0;
+    font-size:18px
+}
+
+.pre-btn{
+    padding:0.7%;
+    margin:0 1% 0 0;
+    border:none;
+}
+.pre-btn:hover{
+    background-color: rgba(0,0,0,0.8);
+    color:white;
+    transition:0.5s;
+}
+.nxt-btn{
+    border:none;
+    padding:0.7%
+}
+
+.nxt-btn:hover{
+    background-color: rgba(0,0,0,0.8);
+    color:white;
+    transition:0.5s;
+}
+
+.card-content{
+    display:block;
+    padding:5% 0 0 0;
+    font-family: 'Oswald';
+}
+.price{
+    background-color: gold;
+    width:20%;
+    padding:1%;
+    margin:0 0 0 5%;
+    text-align: center;
+}
+.name{
+    display:flex;
+    padding:1% 0 0 5%;
+    
+}
+.rating{
+    padding:1% 0 0 5%;
+}
+.slider-size{
+    padding:1% 0 2% 5%
+}
+@media screen and (max-width:600px){
+    .product-card{
+        width:50%;
+        /* margin-right:10px; */
+    }
+    .product-image .image{
+        width:100%;
+    }
+    .product-image{
+        width:100%;
+    }
+}

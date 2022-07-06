@@ -1,0 +1,55 @@
+
+.personal{
+    font-family: 'Bebas Neue';
+    font-size: 30px;
+}
+
+.profile{
+    background-color: #e8e9eb;
+    padding:2%;
+    border-radius: 5px;
+}
+.profile-input-div{
+    padding:2% 0 0 0
+}
+.profile-contents{
+    
+    padding:2% 0 4% 0;
+    display:flex
+}
+.profile-1,.profile-2{
+    width:100%;
+}
+.profile-input{
+    width:90%;
+    padding:2%;
+    border:none;
+    border-radius: 5px;
+    margin:0 0 4% 0
+}
+.gender-1{
+    border:none;
+    padding:2% 4% 2% 4%;
+    margin:0 2% 0 0;
+    background-color: gold;
+}
+.gender-2{
+    border:none;
+    padding:2% 4% 2% 4%;
+    margin:0 2% 0 0;
+    background-color: white;
+    cursor: pointer;
+}
+.update{
+    display:flex;
+    justify-content: end;
+}
+.submit-update{
+    /* border:1px solid black; */
+    border:none;
+    background-color: gold;
+    padding:1% 3% 1% 3%
+}
+.submit-update:hover{
+    background-color: goldenrod;
+}

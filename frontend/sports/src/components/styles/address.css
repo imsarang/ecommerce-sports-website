@@ -1,0 +1,160 @@
+.address{
+    border-radius: 5px;
+}
+.add-heading,.add-address{
+    padding:2%;
+    /* border-bottom: 5px solid white; */
+    background-color: #e8e9eb;
+}
+.add-heading{
+    margin:0 0 0.3% 0
+}
+.add-address{
+    display:flex;
+    justify-content: space-between;
+    /* padding:2%; */
+    cursor: pointer;
+}
+.add-address:hover{
+    background-color: rgb(183, 181, 181);
+    transition: 0.5s;
+}
+.add-icon{
+    padding:0 3% 0 0
+}
+
+.show-address{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background-color: rgba(0,0,0,0.8);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    z-index:99
+}
+.address-content{
+    background-color: white;
+    position:fixed;
+    /* top:10%; */
+    width:35%;    
+    border-radius: 5px;
+}
+.new-heading{
+    padding:3%;
+    background-color: rgb(171, 198, 240);
+    display:flex;
+    justify-content: space-between;
+    font-size: 20px;
+}
+.new-content{
+    padding:4%
+}
+.new-con-head{
+    padding:1% 1% 0 1%
+}
+.content-1-1{
+    display:flex;
+    justify-content:left;
+}
+.new-addr-input-2{
+    width:100%;
+    padding:2%;
+    border:none;
+    border-bottom:1px solid black;
+    outline:none;
+}
+.new-addr-input-1{
+    width:100%;
+    padding:2%;
+    border:none;
+    border-bottom: 1px solid black;
+    outline:black
+}
+.content-2-1-2{
+    display:flex
+}
+/* .content-2 */
+.content-input-1,.content-input-3{
+    /* padding:1% 5% 0 0; */
+    width:100%;
+    /* padding:0 1% 0 0 */
+}
+.content-input-1{
+    padding:3% 2% 0 0
+}
+.content-input-3{
+    padding:3% 0 0 2%
+}
+.content-input-2,.content-input-4{
+    padding:3% 0 2% 0;
+}
+.add-new-address{
+    width:100%;
+    padding:10% 0 0 0
+}
+.address-btn{
+    width:100%;
+    border:none;
+    background-color: #349beb;
+    color:white;
+    font-family: 'Bebas Neue';
+    font-size: 20px;
+    padding:2%;
+    border-radius: 5px;
+}
+.show-new-address{
+    background-color: #e8e9eb;
+    margin:1% 0 0 0;
+    padding:0 0 0 2%
+}
+.new-address-address{
+    padding:1% 0 0 0
+}
+.new-address-name{
+    padding:2% 0 0 0;
+    font-weight: bold;
+}
+.new-address-phone{
+    padding: 1% 0 2% 0
+}
+.new-address-btns{
+    display:flex;
+    justify-content: space-around;
+    margin:0 2% 2% 0;
+    padding:0 0 2% 0
+}
+.new-labels{
+    background-color: white;
+    width:100%;
+    text-align: center;
+    margin:0 10% 0 0;
+    padding:1%;
+    cursor:pointer
+}
+.new-label-active{
+    background-color: gold;
+    width:100%;
+    text-align: center;
+    margin:0 10% 0 0;
+    padding:1%;
+    color:white;
+    cursor:pointer
+}
+.default{
+    background-color: gold;
+    margin:1% 0 0 0;
+    padding:0 0 0 2%
+}
+.new-labels:hover{
+    background-color: rgb(183, 181, 181);
+    transition: 0.5s;
+}
+
+@media screen and (max-width:750px){
+    .address-content{
+        width:70%;
+    }
+}
