@@ -1,2 +1,1 @@
-*node_modules
-det.env
+node_modules/*
