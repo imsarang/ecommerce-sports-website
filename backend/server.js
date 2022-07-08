@@ -21,7 +21,7 @@ const expressSession = require('express-session')
 require('./controller/passport')
 
 // port
-const port = process.env.PORT
+const port = process.env.PORT || 5000
 
 // connect to database
 connectDB()
