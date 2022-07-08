@@ -4,7 +4,7 @@ const DB = process.env.MONGO_URI
 
 const connectDB = async()=>{
     try{
-        await mongoose.connect(DB,{
+        await mongoose.connect(process.env.MONGODB_URI||DB,{
             useNewUrlParser:true,
             useUnifiedTopology:true,
         })
