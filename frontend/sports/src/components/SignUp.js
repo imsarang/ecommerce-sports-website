@@ -144,9 +144,7 @@ const SignUp = () => {
         }
 
     }
-    const handleGoogle = () => {
-
-    }
+    
     const handleLoginUser = (e) => {
         setUser({ ...userLogin, [e.target.name]: e.target.value })
     }
@@ -157,8 +155,8 @@ const SignUp = () => {
         setPhone(value)
 
     }
-    const responseSuccessGoogle = ()=>{
-
+    const responseSuccessGoogle = (response)=>{
+        console.log(response);
     }
     const responseErrorGoogle = ()=>{
 

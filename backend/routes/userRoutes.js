@@ -1,7 +1,8 @@
 const express = require('express')
 const passport = require("passport")
-const { addUser, displayUser, updateUser, deleteUser, loginUser, logoutUser, updateAddress, addAddress, updateProfile, deleteAddress, setActive, addReview, deleteReview, showReviews, addOrder, getReview, addReturns, getAllUsers, getAddress, deliveryAddress, removeOrder, setAdmin, removeAdmin, googleLogin } = require('../controller/userController')
+const { addUser, displayUser, updateUser, deleteUser, loginUser, logoutUser, updateAddress, addAddress, updateProfile, deleteAddress, setActive, addReview, deleteReview, showReviews, addOrder, getReview, addReturns, getAllUsers, getAddress, deliveryAddress, removeOrder, setAdmin, removeAdmin, googleLogin} = require('../controller/userController')
 const { authUser, handleRefreshToken } = require('../middleware/authenticate')
+const { sendEmail } = require('../utils/sendEmail')
 const router = express.Router()
 
 router.route('/add').post(addUser)
@@ -36,36 +37,18 @@ router.route('/return/:username').put(addReturns)
 router.route('/setAdmin/:id').put(setAdmin)
 router.route('/removeAdmin/:id').put(removeAdmin)
 
-router.get('/login/success',(req,res)=>{
-    if(!req.user) res.status(403).json({
-        success:false,
-        message:"User Not Authorized"
-    })
-    res.status(200).json({
-      success:true,
-      message:"LOGIN SUCCESSFUL!"  
-    })
-})
+router.route('/send/email').get(sendEmail)
 
-router.get("/google",passport.authenticate("google",["profile","email"]))
-
-router.get('/google/logout',(req,res)=>{
-    req.logout()
-    res.redirect(process.env.CLIENT_URL)
-})
-
-router.get('/login/failed',(req,res)=>{
-    res.status(401).json({
-        success:false,
-        message:"Login Failure"
-    })
-})
-router.get(
-    '/login/google',
-    passport.authenticate("google",{
-        successRedirect: process.env.CLIENT_URL,
-        failureRedirect: '/login/failed'
-    })
-)
+router.route('/auth/google').get(passport.authenticate("google",{scope:['profile','email']}),googleLogin)
+// router.route('/auth/google/callback').get(passport.authenticate("google",{
+//     successRedirect:'http://localhost:3000',
+//     failureRedirect:'/auth/failure'
+// }))
+// router.route('/auth/failure').get((req,res)=>{
+//     res.json({
+//         success:false,
+//         message:"Login Failed"
+//     })
+// })
 
 module.exports = router

@@ -9,7 +9,7 @@ const { updateOne, findByIdAndDelete } = require('../model/userModel');
 const { generateToken } = require('../utils/generateToken');
 const { refreshToken } = require('../utils/refreshToken');
 const { handleRefreshToken, handleDeleteRefreshToken } = require('../middleware/authenticate');
-
+const nodemailer = require("nodemailer")
 
 
 // push req
@@ -106,7 +106,7 @@ exports.loginUser = catchAsyncErrors(async (req, res) => {
     }
 })
 exports.googleLogin = catchAsyncErrors(async(req,res)=>{
-
+    
 })
 exports.loginOTP = catchAsyncErrors(async (req, res) => {
 
@@ -586,3 +586,4 @@ exports.removeAdmin = catchAsyncErrors(async(req,res)=>{
     })
     if(user) res.sendStatus(201)
 })
+
