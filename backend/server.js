@@ -1,15 +1,11 @@
 const express = require('express')
 const app = express()
 // including .env file
-const cors = require('cors')
-const passport = require('passport')
-const GoogleStrategy = require("passport-google-oauth20").Strategy
-const flash = require('connect-flash')
-const path = require('path')
-
 const dotenv = require("dotenv")
 dotenv.config({path:'./det.env'})
-// const passportSetup = require('./passport')
+
+const cors = require('cors')
+
 
 const connectDB = require('./db/connect')
 
@@ -18,11 +14,8 @@ const userRoutes = require("./routes/userRoutes")
 const productRoutes = require("./routes/productRoutes")
 const { notFound, errorHandler } = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
-const expressSession = require('express-session')
-require('./controller/passport')
 
-// port
-// const port = process.env.PORT || 5000
+require('./controller/passport')
 
 // connect to database
 connectDB()
@@ -38,14 +31,7 @@ app.use(express.json())
 
 // middleware to handle cookie
 app.use(cookieParser('EXPRESS_SESSION_SECRET'))
-// app.use(expressSession({
-//     secret:process.env.EXPRESS_SESSION_SECRET,
-//     resave:true,
-//     saveUninitialized:false,
 
-// }))
-
-// user routes
 app.use("/api/v1",userRoutes)
 
 // product routes
