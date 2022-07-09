@@ -34,7 +34,7 @@ app.use("/api/v1",userRoutes)
 app.use("/api/v2",productRoutes)
 
 // middleware routes
-app.use(notFound)
+// app.use(notFound)
 app.use(errorHandler)
 
 
