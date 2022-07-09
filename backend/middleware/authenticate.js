@@ -28,7 +28,7 @@ exports.authUser = (req,res,next)=>{
 exports.handleRefreshToken = async(req,res)=>{
     const cookies = req.cookies
     // checking if the cookie has jwt property:
-    if(!cookies?.jwt)
+    if(!cookies.jwt)
         return res.sendStatus(401)
     // console.log(cookies.jwt);
     const refreshToken = cookies.jwt;
@@ -57,7 +57,7 @@ exports.handleRefreshToken = async(req,res)=>{
 exports.checkAdmin = async(req,res,next)=>{
     const cookies = req.cookies
 
-    if(!cookies?.jwt) res.sendStatus(401)
+    if(!cookies.jwt) res.sendStatus(401)
     const refreshToken = cookies.jwt
     const refToken = await RefreshToken.findOne({token:refreshToken})
     const foundUser = await User.findOne({_id:refToken.user})
