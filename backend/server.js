@@ -25,7 +25,6 @@ require('./controller/passport')
 const port = process.env.PORT || 5000
 
 // connect to database
-connectDB()
 
 //middleware to handle json data and payloads
 app.use(cors({
@@ -35,6 +34,7 @@ app.use(cors({
 }))
 
 app.use(express.json())
+connectDB()
 
 // middleware to handle cookie
 app.use(cookieParser('EXPRESS_SESSION_SECRET'))
