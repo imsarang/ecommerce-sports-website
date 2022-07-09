@@ -539,7 +539,7 @@ exports.logoutUser = catchAsyncErrors(async (req, res) => {
     
     // on client,also delete the access token
     const cookies = req.cookies
-    if(!cookies?.jwt) return res.sendStatus(204)
+    if(!cookies.jwt) return res.sendStatus(204)
     const refreshToken = cookies.jwt
     
     // is refreshToken in db
