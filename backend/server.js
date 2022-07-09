@@ -55,14 +55,14 @@ app.use("/api/v2",productRoutes)
 app.use(notFound)
 app.use(errorHandler)
 
-if(process.env.NODE_ENV === 'production'){
-    app.use(express.static('frontend/sports/build'))
-    app.get('*',(req,res)=>{
-        res.sendFile(path.resolve(
-            __dirname,'frontend/sports','build','index.html'
-        ))
-    })
-}
+// if(process.env.NODE_ENV === 'production'){
+//     app.use(express.static('frontend/sports/build'))
+//     app.get('*',(req,res)=>{
+//         res.sendFile(path.resolve(
+//             __dirname,'frontend/sports','build','index.html'
+//         ))
+//     })
+// }
 
 app.listen(port,()=>{
     console.log(`Server is running on port : ${port}`);
