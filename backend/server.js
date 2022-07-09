@@ -22,7 +22,7 @@ const expressSession = require('express-session')
 require('./controller/passport')
 
 // port
-const port = process.env.PORT || '5000'
+// const port = process.env.PORT || 5000
 
 // connect to database
 connectDB()
@@ -56,6 +56,6 @@ app.use(notFound)
 app.use(errorHandler)
 
 
-app.listen(port,()=>{
-    console.log(`Server is running on port : ${port}`);
+app.listen(process.env.PORT || 5000,()=>{
+    console.log(`Server is running on port : ${process.env.PORT || 5000}`);
 })
