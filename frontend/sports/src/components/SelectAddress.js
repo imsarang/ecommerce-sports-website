@@ -3,6 +3,7 @@ import { FaPlus } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { CLICK_CHANGE_ADDRESS, CLICK_SIGNIN, PINCODE } from './redux/clickingReducer'
 import { login, username } from './redux/userReducer'
+import { getLocal } from './storeInLocalStorage'
 import './styles/general.css'
 
 const SelectAddress = () => {
@@ -10,6 +11,7 @@ const SelectAddress = () => {
     const dispatch = useDispatch()
     const user_name = useSelector(username)
     const loggedIN = useSelector(login)
+    const token = getLocal()
 
     const handleClose = () => {
         dispatch(CLICK_CHANGE_ADDRESS({}))
@@ -39,10 +41,14 @@ const SelectAddress = () => {
         } else alert(`Invalid Pincode`)
     }
     const showActiveAddress = async () => {
-        const result = await fetch(`api/v1/show/${user_name}`, {
-            method: "GET"
+        const result = await fetch(`/api/v1/show`, {
+            method: "GET",
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
         })
         const user = await result.json()
+        console.log(user.user);
         if (user.success)
             setActiveAddress(user.user.active)
     }

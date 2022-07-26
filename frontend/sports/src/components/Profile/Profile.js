@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux'
 import InfoModal from '../Info/InfoModal'
 import Loading from '../Loading'
 import { phone, username } from '../redux/userReducer'
+import { getLocal } from '../storeInLocalStorage'
 import '../styles/profile.css'
 const Profile = ({ load,setLoad,firstname, lastname, username, email, contact, gender, showUserFromDatabase, setMale, info, setInfo, male }) => {
 
-
+    const token = getLocal()
     const [styleMale, setClassMale] = useState('gender-2')
     const [styleFemale, setClassFemale] = useState('gender-2')
     const [seconds, setSeconds] = useState()
@@ -26,9 +27,10 @@ const Profile = ({ load,setLoad,firstname, lastname, username, email, contact, g
         // setLoad(true)
 
         try {
-            const result = await fetch(`/api/v1/update/${username}`, {
+            const result = await fetch(`/api/v1/update`, {
                 method: "PUT",
                 headers: {
+                    Authorization:`Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({

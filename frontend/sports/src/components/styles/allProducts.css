@@ -1,0 +1,119 @@
+.admin-all{
+    border:1px solid black;
+    width:100%;
+    border-radius: 5px;
+    padding:2%;
+    cursor: pointer;
+}
+.view-product{
+    width:280px;
+    height:410px;
+    position: absolute;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin:2%; */
+    /* top:10px; */
+}
+.admin-all-image-all{
+    width:100%;
+}
+.admin-all-img-tag{
+    width:100%;
+}
+.admin-all-content{
+    padding:1% 2% 4% 2%;
+    font-family:"Oswald"
+}
+
+.all-products-grid{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+}
+.item-all{
+    padding:2%;
+}
+.indicator-div{
+    display:flex;
+    justify-content: center;
+    width:100%;
+}
+.indicator-btns{
+    display:flex;
+    justify-content: center;
+    width:auto;
+}
+.admin-all-trash{
+    display:flex;
+    justify-content: center;
+    padding:2%;
+    background-color: rgb(248, 34, 77);
+    font-size:25px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.admin-all-trash:hover{
+    background-color: rgb(229, 5, 50);
+}
+.go-prev-div,.go-next-div{
+    padding: 0 3%;
+}
+#indicator-btn{
+    padding:0 10%   ;
+}
+#ind-btn-1{
+    /* padding:30%; */
+    border:none;
+    width:30px;
+    height:50px;
+    font-family: "Bebas Neue";
+    background-color: gold;
+}
+#ind-btn-2{
+    /* padding:30%; */
+    border:none;
+    width:30px;
+    height:50px;
+    font-family: "Bebas Neue";
+    background-color: rgb(224, 227, 230);
+}
+#go-prev,#go-next{
+    width:30px;
+    height:50px;
+    background-color: #349beb;
+    border: none;
+}
+#go-prev{
+    clip-path: polygon(20% 0,100% 0,100% 100%,0 100%);
+}
+#go-next{
+    clip-path:polygon(0 0,80% 0,100% 100%,0 100%);
+}
+#go-next:hover,#go-prev:hover{
+    background-color: gold;
+}
+.order-del{
+    /* display:flex;   */
+    width:100%;
+    font-family: 'Oswald';
+    padding:2%;  
+}
+.order-del-1{
+    font-weight: bold;   
+}
+.order-del-2{
+    width:100%;
+}
+@media screen and (max-width:850px){
+    .all-products-grid{
+        display:grid;
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+@media screen and (max-width:450px){
+    .all-products-grid{
+        display:grid;
+        grid-template-columns: repeat(1,1fr);
+    }
+}

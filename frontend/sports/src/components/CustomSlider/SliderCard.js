@@ -34,10 +34,12 @@ const SliderCard = ({ image, imgRef, name, price, available, rating, id, categor
           {name}
         </div>
         <div className='rating'>
-          <div style={{padding:'0 0 0 2%'}}>{rating}/5</div>
-          <div style={{
-            padding: '0 1% 1% 2%'
-          }}><FaStar color={'gold'} /></div>
+          {
+            rating==0||rating==null||rating==''?<>Unrated</>:<><div style={{padding:'0 0 0 2%'}}>{rating}/5</div>
+            <div style={{
+              padding: '0 1% 1% 2%'
+            }}><FaStar color={'gold'} /></div></>
+          }
         </div>
         <div className='slider-size'>Size:{size}</div>
       </div>

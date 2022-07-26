@@ -1,12 +1,43 @@
 .orders{
-    background-color: #e8e9eb;
     border-radius: 5px;
 }
 .heading{
     font-size: 30px;
     font-family: 'Bebas Neue';
     padding:2%;
-    border-bottom: 10px solid white;
+    background-color: #e8e9eb;
+    display:flex;
+    justify-content: space-between;
+}
+.marker-div{
+    display:flex;
+}
+.order-page{
+    padding:0 2% 0 2%;
+}
+.order-indicators{
+    display:flex;
+}
+.prev-div,.marker-div,.next-div{
+    padding:1% 2% 0 2%;
+}
+#order-prev,#order-next{
+    border:none;
+    background-color: #349beb;
+}
+#curr-page{
+    border:none;
+    background-color: gold;
+}
+#order-page{
+    border:none;
+    background-color: #b1b2b5;
+}
+#order-prev{
+    clip-path: polygon(20% 0,100% 0,100% 100%,0 100%);
+}
+#order-next{
+    clip-path:polygon(0 0,80% 0,100% 100%,0 100%);
 }
 .order-quantity{
     display:flex;
@@ -15,17 +46,27 @@
 .order-quan{
     padding:0 0 0 2%
 }
+.ordered-items{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    padding:2% 0 0 0;
+}
 .order-items{
-    display: flex;
+    /* display: flex; */
     width:100%;
-    background-color: #e8e9eb;
+    /* background-color: #e8e9eb; */
     margin:1% 0 0 0;
-    border-radius: 5px;
-    border-bottom: 4px solid white;
+    padding:2%;
+    /* border-bottom: 4px solid white; */
+}
+.order-items-main{
+    width:100%;
+    border: 1px solid black;
+    border-radius: 10px;
 }
 .order-items-image{
-    width:25%;
-    padding:2%;
+    width:100%;
+    padding:4%;
 }
 .order-quantity{
     width:25%;
@@ -33,19 +74,28 @@
 }
 
 .order-item-content{
-    width:50%;
-    padding:2% 0 0 0;
+    width:100%;
+    padding:2%;
 }
 .order-item-name{
-    font-family:'Oswald'
+    font-family:'Oswald';
+    width:100%;
 }
 .order-item-image{
-    max-width:80%;
+    width:100%;
 }
 .order-item-content-2-2{
     display:flex;
     justify-content: space-between;
     padding:3% 0 0 0
+}
+.dop{
+    width:100%;
+    display:flex;
+}
+.add-delivery{
+    width:100%;
+    display:flex
 }
 .order-rating{
     display:flex;
@@ -65,13 +115,14 @@
     display:flex;
     justify-content: center;
     align-items: end;
-    padding:0 0 1% 0;
-    width:50%;
+    padding:2%;
+    width:100%;
 }
 #cancel{
     border:none;
     background-color: rgb(246, 71, 51);
-    width:50%;
+    width:100%;
+    padding:2%;
     border-radius: 5px;
 }
 .cancel-modal-bg{

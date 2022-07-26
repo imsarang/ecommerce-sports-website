@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import InfoModal from '../Info/InfoModal'
 import Loading from '../Loading'
 import { clickAddress, CLICK_ADDRESS, PINCODE } from '../redux/clickingReducer'
+import { getLocal } from '../storeInLocalStorage'
 import '../styles/address.css'
 
 
@@ -13,9 +14,10 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
     const dispatch = useDispatch()
     // const [style, setStyle] = useState(false)
     // const [seconds,setSeconds] = useState()
-    
+    const token = getLocal()
 
     const [addr, setAddress] = useState({
+        id:null,
         firstname: '',
         lastname: '',
         contact: null,
@@ -28,16 +30,21 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
     const [allAddress, setAllAddress] = useState([])
     const [edit, setEdit] = useState(false)
     const [activeID, setActiveID] = useState()
+    const [editPlace,setEditPlace] = useState()
 
     const showAddressFromDatabase = async () => {
         setLoad(true)
-        const result = await fetch(`api/v1/show/${user_name}`, {
-            method: "GET"
+        const result = await fetch(`api/v1/address/all`, {
+            method: "GET",
+            headers:{
+                Authorization:`Bearer ${token}`,
+            }
         })
         const user = await result.json()
+        
         if (user.success)
-            setAllAddress(user.user.address)
-        setActiveID(user.user.active.pincode)
+            setAllAddress(user.user[0].addresses)
+        setActiveID(user.user[0].active)
         setLoad(false)
     }
  
@@ -50,21 +57,12 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
     }
     const handleActive = async (place) => {
         setLoad(true)
-        const result = await fetch(`/api/v1/address/setactive/${user_name}`, {
+        const result = await fetch(`/api/v1/address/setactive/${place._id}`, {
             method: "PUT",
             headers: {
+                Authorization:`Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                firstname: place.firstname,
-                lastname: place.lastname,
-                contact: place.contact,
-                address1: place.address1,
-                address2: place.address2,
-                address3: place.address3,
-                pincode: place.pincode,
-                city: place.city
-            })
         })
         setActiveID(place._id)
         setSeconds(2)
@@ -80,6 +78,7 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
         setLoad(true)
         setEdit(true)
         setAddress({
+            id:place._id,
             firstname: place.firstname,
             lastname: place.lastname,
             contact: place.contact,
@@ -92,15 +91,41 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
         dispatch(CLICK_ADDRESS({
             click: true
         }))
-        handleEditAddressToDatabase(place)
+        setEditPlace(addr)
         setLoad(false)
         // setProfile(true)
         // setAddressIndex(false)
     }
+
+    const handleEditAddressToDatabase=async()=>{
+        console.log(editPlace);
+        const result = await fetch(`/api/v1/address/update/${editPlace.id}`,{
+            method:'PUT',
+            headers:{
+                Authorization:`Bearer ${token}`,
+                'Content-Type':"application/json"
+            },
+            body:JSON.stringify({
+                firstname: editPlace.firstname,
+            lastname: editPlace.lastname,
+            contact: editPlace.contact,
+            address1: editPlace.address1,
+            address2: editPlace.address2,
+            address3: editPlace.address3,
+            pincode: editPlace.pincode,
+            city: editPlace.city
+            })
+        })
+        // setShowEdit(true)
+    }
+
     const handleDelete = async (place) => {
         setLoad(true)
-        const result = await fetch(`/api/v1/delete/address/${user_name}/${place._id}`, {
-            method: "PUT"
+        const result = await fetch(`/api/v1/address/delete/${place._id}`, {
+            method: "PUT",
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
         })
         setProfile(true)
         setAddressIndex(false)
@@ -111,9 +136,10 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
     const addAddressToDatabase = async () => {
         setLoad(true)
         try {
-            const res = await fetch(`/api/v1/update/address/${user_name}`, {
+            const res = await fetch(`/api/v1/address`, {
                 method: "PUT",
                 headers: {
+                    Authorization:`Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
@@ -137,25 +163,7 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
         setLoad(false)
     }
 
-    const handleEditAddressToDatabase=async(place)=>{
-        const result = await fetch(`/api/v1/address/update/${user_name}/${place._id}`,{
-            method:'PUT',
-            headers:{
-                'Content-Type':"application/json"
-            },
-            body:JSON.stringify({
-                firstname: place.firstname,
-            lastname: place.lastname,
-            contact: place.contact,
-            address1: place.address1,
-            address2: place.address2,
-            address3: place.address3,
-            pincode: place.pincode,
-            city: place.city
-            })
-        })
-        // setShowEdit(true)
-    }
+    
     const handleAddAddress = () => {
         setEdit(false)
         dispatch(CLICK_ADDRESS({
@@ -184,7 +192,8 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
         dispatch(CLICK_ADDRESS({
             click: false
         }))
-        addAddressToDatabase()
+        if(edit) handleEditAddressToDatabase()
+        else   addAddressToDatabase()
 
         setProfile(true)
         setAddressIndex(false)
@@ -321,9 +330,10 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
                                     </div>
                                 </div>
                                 <div className='add-new-address'>
-                                    <button className='address-btn' type='submit' >{
-                                        edit ? <>Edit Address</> : <>Add Address</>
-                                    }</button>
+                                    {
+                                        edit?<><button className='address-btn' type='submit' >Edit</button></>
+                                        :<><button className='address-btn' type='submit' >Add</button></>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -333,7 +343,6 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
             {
                 allAddress.length != 0 ?
                     allAddress.map((place) => {
-                        console.log(place)
                         return <div className={place.default ? 'default' : 'show-new-address'}>
                             <div className='new-address-name'>
                                 {place.firstname} {place.lastname}
@@ -352,9 +361,9 @@ const Address = ({ user_name,load,setLoad, setProfile,showNew,setShowNew, setAdd
                             <div className='new-address-btns'>
                                 {/* <div className='new-labels' onClick={() => handleEdit(place)}>Edit</div> */}
                                 <div className='new-labels' onClick={() => handleDelete(place)}>Delete</div>
-                                <div className={activeID == place.pincode ? 'new-label-active' : 'new-labels'} onClick={() => handleActive(place)}>
+                                <div className={activeID == place._id ? 'new-label-active' : 'new-labels'} onClick={() => handleActive(place)}>
                                         {
-                                            activeID==place.pincode?<>Default Address</>:<>Set As Default Address</>
+                                            activeID==place._id?<>Default Address</>:<>Set As Default Address</>
                                         }
                                 </div>
                             </div>

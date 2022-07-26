@@ -36,12 +36,18 @@
     background-color: #e8e9eb;
     padding:2% 3% 2% 3%;
     cursor: pointer;
+    border-radius: 10px;
 }
-.address-ind-act{
+.address-ind-act,.delivery-address{
     margin:0 0 2% 0;
     background-color: gold;
     padding:2% 3% 2% 3%;
     cursor: pointer;
+    font-family:'Oswald';
+    border-radius: 10px;
+}
+.delivery-address{
+    background-color: white;
 }
 .address-ind:hover{
     background-color: rgb(193, 192, 192);

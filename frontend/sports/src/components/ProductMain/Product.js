@@ -13,7 +13,7 @@ import '../styles/product.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { CLICK_CHANGE_ADDRESS, CLICK_SIZE_CHART, pincode, sizechart } from '../redux/clickingReducer'
 
-import { ADD_TO_CART } from '../redux/cartReducer'
+import { ADD_TO_CART, CART_NOTIF, LAST_CART_CLICK } from '../redux/cartReducer'
 import SizeChart from './SizeChart'
 import NoReview from './NoReview'
 import Loading from '../Loading'
@@ -62,7 +62,7 @@ const Product = () => {
     setLoad(true)
     const result = await fetch(`/api/v2/product/${id}`)
     const product =await result.json()
-    const {_id,name,imageUrl,price,mrp1,maxAvailable,size1,category,technical,advantage,rating,avgRate} = product.product
+    const {_id,name,imageUrl,price,mrp1,maxAvailable,size1,category,technical,advantage,reviews,avgRate} = product.product
     if(product.success)
     {
       // console.log(id);
@@ -83,7 +83,8 @@ const Product = () => {
         country:technical.country,
         avgRate:avgRate
       })
-      setForReview([...review,rating])
+      console.log(product.product);
+      setForReview([...review,reviews])
       setAdvantage({
         advantage1:{
           heading:advantage.advantage1.heading,
@@ -108,7 +109,7 @@ const Product = () => {
   useEffect(()=>{
     showProductFromDatabase()
     
-  },[])
+  },[id])
   const handleAddress = () => {
     dispatch(CLICK_CHANGE_ADDRESS())
   }
@@ -131,6 +132,7 @@ const Product = () => {
       available: item.available,
       size: item.size
     }))
+    dispatch(CART_NOTIF({}))
   }
 
   if(load) return <Loading/>
@@ -195,7 +197,9 @@ const Product = () => {
               item.rating!=0?<div className='pro-rate' style={{
                 padding: '2% 5% 2% 5%'
               }}>
-                {item.avgRate}/5 <FaStar style={{ color: 'gold' }} />
+                {
+                  item.avgRate==0?<></>:<>{item.avgRate}/5 <FaStar style={{ color: 'gold' }} /></>
+                }
               </div>:<></>
             }
             
@@ -383,7 +387,7 @@ const Product = () => {
                   storage={item.storage}
                 /> :
                   stage === 'review' ? 
-                  item.rating?<NoReview/>:
+                  
                   <Review rating={review} id={item.id} productName={item.name} 
                   handleStage={handleStage}/> 
                   

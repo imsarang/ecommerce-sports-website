@@ -1,22 +1,27 @@
 const express = require('express')
 const passport = require("passport")
-const { addUser, displayUser, updateUser, deleteUser, loginUser, logoutUser, updateAddress, addAddress, updateProfile, deleteAddress, setActive, addReview, deleteReview, showReviews, addOrder, getReview, addReturns, getAllUsers, getAddress, deliveryAddress, removeOrder, setAdmin, removeAdmin, googleLogin} = require('../controller/userController')
+const { addUser, displayUser, updateUser, deleteUser, loginUser, logoutUser, updateAddress, addAddress, updateProfile, deleteAddress, setActive, addReview, deleteReview, showReviews, addOrder, getReview, addReturns, getAllUsers, getAddress, deliveryAddress, removeOrder, setAdmin, removeAdmin, googleLogin, getOrders, getReturns} = require('../controller/userController')
 const { authUser, handleRefreshToken } = require('../middleware/authenticate')
 const { sendEmail } = require('../utils/sendEmail')
 const router = express.Router()
 
+// user profile routes
 router.route('/add').post(addUser)
-router.route('/show/:username').get(displayUser)
-router.route('/update/:username').put(updateUser)
-router.route('/update/address/:username').put(addAddress)
-router.route('/delete/:id').delete(deleteUser)
-router.route('/delete/address/:username/:id').put(deleteAddress)
-router.route('/address/update/:username/:id').put(updateAddress)
-router.route('/all/address/:username').get(getAddress)
-router.route('/address/setactive/:username').put(setActive)
-router.route('/delivery/address/:username').put(deliveryAddress)
+router.route('/show').get(authUser,displayUser)
+router.route('/update').put(authUser,updateUser)
+router.route('/delete').delete(authUser,deleteUser)
+
+// Address routes
+router.route('/address').put(authUser,addAddress)
+router.route('/address/delete/:id').put(authUser,deleteAddress)
+router.route('/address/update/:id').put(authUser,updateAddress)
+router.route('/address/all').get(authUser,getAddress)
+router.route('/address/setactive/:id').put(authUser,setActive)
+router.route('/address/delivery/:id').put(authUser,deliveryAddress)
+
 router.route('/all/users').get(authUser,getAllUsers)
 
+// auth routes
 router.route('/login').post(loginUser)
 router.route('/refresh').get(handleRefreshToken)
 router.route('/logout').get(logoutUser)
@@ -25,14 +30,17 @@ router.route('/logout').get(logoutUser)
 
 // router.route('/loginOtp')
 
+// review routes
+router.route('/add-review/:id').put(authUser,addReview)
+router.route('/delete-review/:reviewID/:productID').put(authUser,deleteReview)
 
-router.route('/add-review/:username/:id').put(addReview)
-router.route('/delete-review/:username/:id1/:id/:id2').put(deleteReview)
-
-
-router.route('/order/:username/:productName').put(addOrder)
-router.route('/order/remove/:username/:id').put(removeOrder)
-router.route('/return/:username').put(addReturns)
+// order routes
+router.route('/order/').put(authUser,addOrder)
+router.route('/order/remove/:orderId/:productId').put(authUser,removeOrder)
+router.route('/order/get').get(authUser,getOrders)
+// return routes
+router.route('/return/:returnId/:productId').put(authUser,addReturns)
+router.route('/return/get').get(authUser,getReturns)
 
 router.route('/setAdmin/:id').put(setAdmin)
 router.route('/removeAdmin/:id').put(removeAdmin)

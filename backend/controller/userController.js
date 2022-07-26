@@ -2,6 +2,9 @@ const catchAsyncErrors = require('../middleware/catchAsyncErrors')
 const User = require('../model/userModel')
 const Product = require('../model/productModel')
 const RefreshToken = require('../model/refreshTokenModel')
+const Review = require('../model/reviewModal')
+const Address = require('../model/addressModel')
+const Order = require('../model/orderModel')
 
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
@@ -15,7 +18,7 @@ const nodemailer = require("nodemailer")
 // push req
 exports.addUser = catchAsyncErrors(async (req, res) => {
 
-    const { username, email, phone, password,isAdmin ,isSuperAdmin} = req.body;
+    const { username, email, phone, password, isAdmin, isSuperAdmin } = req.body;
     const hash_password = await bcrypt.hash(password, 12)
 
     const user = await User.create({
@@ -44,52 +47,53 @@ exports.loginUser = catchAsyncErrors(async (req, res) => {
     if (user) {
         const isMatched = await bcrypt.compare(password, user.password)
         if (isMatched) {
-            
-            const accessToken = generateToken(user._id)
+
+            const accessToken = await user.generateToken()
+
             const refToken = refreshToken(user._id)
-            
-            const token_in_refresh = await RefreshToken.findOne({user:user._id})
-        
-            if(!token_in_refresh){
+
+            const token_in_refresh = await RefreshToken.findOne({ user: user._id })
+
+            if (!token_in_refresh) {
                 const refreshTokenModel = await RefreshToken.create({
-                    token:refToken,
-                    user:user.id
+                    token: refToken,
+                    user: user.id
                 })
                 // console.log('token');
                 // await refreshTokenModel.save()
-                
-                res.cookie('jwt',refToken,{
-                    httpOnly:true,
-                    maxAge:24*60*60*1000
+
+                res.cookie('jwt', accessToken, {
+                    httpOnly: true,
+                    maxAge: 24 * 60 * 60 * 1000
                 })
-                
+
                 res.status(201).json({
                     success: true,
                     message: "Login Successful",
                     user,
-                    access:accessToken,
+                    access: accessToken,
                 })
             }
-            else
-            {
-                const refreshTokenModel = await RefreshToken.updateOne({user:user.id},{
-                    token:refToken
-                },{new:true})
-                res.cookie('jwt',refToken,{
-                    httpOnly:true,
-                    maxAge:24*60*60*1000
+            else {
+                const refreshTokenModel = await RefreshToken.updateOne({ user: user.id }, {
+                    token: refToken
+                }, { new: true })
+                res.cookie('jwt', accessToken, {
+                    httpOnly: true,
+                    maxAge: 24 * 60 * 60 * 1000
                 })
 
                 res.status(201).json({
                     success: true,
                     message: "Login Successful",
-                    user
+                    user,
+                    access: accessToken
                 })
             }
 
-            
 
-            
+
+
             // handleRefreshToken(req,res)
         }
         else
@@ -105,8 +109,8 @@ exports.loginUser = catchAsyncErrors(async (req, res) => {
         })
     }
 })
-exports.googleLogin = catchAsyncErrors(async(req,res)=>{
-    
+exports.googleLogin = catchAsyncErrors(async (req, res) => {
+
 })
 exports.loginOTP = catchAsyncErrors(async (req, res) => {
 
@@ -117,19 +121,16 @@ exports.loginOTP = catchAsyncErrors(async (req, res) => {
 exports.updateUser = catchAsyncErrors(async (req, res) => {
     const { firstname, lastname, email, phone, gender } = req.body
 
-    const user = await User.updateOne({ username: req.params.username }, {
+    const user = await User.findByIdAndUpdate({
+        _id: req.user._id
+    }, {
         $set: {
-            firstname: firstname,
-            lastname: lastname,
-            email: email,
-            phone: phone,
-            gender: gender
+            firstname, lastname, email, phone, gender
         }
-    })
+    }, { new: true })
 
-    if (user) res.status(201).json({
-        success: "true",
-        message: "user updated!",
+    if (user) return res.status(200).json({
+        success: true,
         user
     })
 })
@@ -137,115 +138,84 @@ exports.updateUser = catchAsyncErrors(async (req, res) => {
 exports.addAddress = catchAsyncErrors(async (req, res) => {
     const { firstname, lastname, contact, address1, address2, address3, pincode, city } = req.body
 
-    const user = await User.updateOne({ username: req.params.username }, {
-        $push: {
-            address: [{
-                firstname: firstname, lastname: lastname,
-                contact: contact,
-                address1: address1,
-                address2: address2,
-                address3: address3,
-                pincode: pincode, city: city,
-                active: 0
-            }]
+    const address = await Address.create({
+        firstname, lastname, contact, address1, address2, address3, pincode, city,
+        user: req.user._id
+    })
+    const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
+        $addToSet: {
+            addresses: address._id
         }
+    }, { new: true }).populate("addresses")
+
+    if (user && address) return res.status(200).json({
+        success: true,
+        user, address
     })
-    if (user) res.status(201).json({
-        success: "true",
-        message: "user updated!",
-        user
-    })
+
 })
 
 exports.updateAddress = catchAsyncErrors(async (req, res) => {
-    const { firstname, lastname, contact, address1, address2, address3, pincode, city, active } = req.body
+    const { firstname, lastname, contact, address1, address2, address3, pincode, city } = req.body
 
-    const user = await User.updateOne({
-        username: req.params.username,
-        address: {
-            $elemMatch: {
-                _id: req.params.id
-            }
-        }
-    }, {
+    const address = await Address.findByIdAndUpdate({ _id: req.params.id }, {
         $set: {
-            "address.$.firstname": firstname,
-            "address.$.lastname": lastname,
-            "address.$.contact": contact,
-            "address.$.address1": address1,
-            "address.$.address2": address2,
-            "address.$.address3": address3,
-            "address.$.pincode": pincode,
-            "address.$.city": city,
-            "address.$.active": 0
+            firstname, lastname, contact, address1, address2, address3, pincode, city
         }
     })
 
-    if (user) res.status(201).json({
+    if (address) res.status(200).json({
         success: true,
-        mesage: "Address Updated!",
-        user
+        message: "Address Updated!"
     })
 })
 
 exports.setActive = catchAsyncErrors(async (req, res) => {
-    const { firstname, lastname, contact, address1, address2, address3, pincode, city } = req.body
 
-    const user = await User.updateOne({
-        username: req.params.username
-    }, {
-        $set: {
-            active: {
-                firstname: firstname,
-                lastname: lastname,
-                contact: contact,
-                address1: address1,
-                address2: address2,
-                address3: address3,
-                pincode: pincode,
-                city: city
-            }
-        }
-    })
+    const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
+        $set: { active: req.params.id },
+        $set: { delivery: req.params.id }
+    }, { new: true }).populate("active").populate("delivery")
 
-    if (user) res.status(201).json({
+    if (user) return res.status(200).json({
         success: true,
-        message: `Address set as active id `,
-        user,
+        message: "Active Address Set",
+        user
     })
+
 })
 exports.deliveryAddress = catchAsyncErrors(async (req, res) => {
-    const { firstname, lastname, contact, address1, address2, address3, pincode, city } = req.body
 
-    const user = await User.updateOne({ username: req.params.username }, {
+    const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
         $set: {
-            delivery: {
-                fistname: firstname,
-                lastname: lastname,
-                contact: contact,
-                address1: address1,
-                address2: address2,
-                address3: address3,
-                pincode: pincode,
-                city: city
-            }
+            delivery: req.params.id
         }
+    }, { new: true }).populate("delivery").populate("active")
+
+    if (user) return res.status(200).json({
+        success: true,
+        message: "Delivery Address Set",
+        user
     })
+
 })
 
 exports.deleteAddress = catchAsyncErrors(async (req, res) => {
-    const user = await User.updateOne({ username: req.params.username }, {
+
+    const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
         $pull: {
-            address: {
-                _id: req.params.id
-            }
+            addresses: req.params.id
         }
-    })
-    if (user) res.status(201).json({
+    }, { new: true }).populate("addresses")
+
+    const address = await Address.findByIdAndDelete({ _id: req.params.id })
+
+    if (user && address) return res.status(200).json({
         success: true,
         message: "Address Removed!",
         user
     })
+
 })
 
 
@@ -253,269 +223,167 @@ exports.deleteAddress = catchAsyncErrors(async (req, res) => {
 exports.addReview = catchAsyncErrors(async (req, res) => {
     const { rate, title, comment, recommend, used_since, email, firstname, lastname, userGender, age, productName } = req.body
     const dateObj = new Date()
-    if (req.params.username) {
-        const user = await User.updateOne({
-            username: req.params.username,
-        }, {
-            $push: {
-                review: [{
-                    rate: rate,
-                    title: title,
-                    comment: comment,
-                    used_since: used_since,
-                    email: email,
-                    firstname: firstname,
-                    lastname: lastname,
-                    userGender: userGender,
-                    age: age,
-                    recommend: recommend,
-                    productName: productName,
-                    dateOfReview: {
-                        day: dateObj.getDate(),
-                        month: dateObj.getMonth() + 1,
-                        year: dateObj.getFullYear()
-                    }
-                }]
-            }
-        })
-        if (user) res.status(201).json({
-            success: true,
-            message: "Review Submitted",
-            user,
-        })
-    }
+    const review = await Review.create({
+        rate, title, comment, recommend, used_since, email, firstname, lastname, userGender, age, productName,
+        dateOfReview: {
+            day: dateObj.getDate(),
+            month: dateObj.getMonth() + 1,
+            year: dateObj.getFullYear()
+        },
+        product: req.params.id,
+        user: req.user._id
+    })
 
-    try {
-        const product = await Product.updateOne({
-            _id: req.params.id
-        }, {
-            $push: {
-                rating: {
-                    rate: rate,
-                    title: title,
-                    comment: comment,
-                    used_since: used_since,
-                    email: email,
-                    firstname: firstname,
-                    lastname: lastname,
-                    userGender: userGender,
-                    recommend: recommend,
-                    age: age,
-                    dateOfReview: {
-                        day: dateObj.getDate(),
-                        month: dateObj.getMonth() + 1,
-                        year: dateObj.getFullYear()
-                    }
-                }
-            },
-        })
-        if (product) res.status(201).json({
-            success: true,
-            product
-        })
+    const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
+        $addToSet: {
+            reviews: review._id
+        }
+    }, { new: true }).populate("reviews orders addresses")
 
-    }
-    catch (e) { console.log(e); }
+    const product = await Product.findByIdAndUpdate({ _id: req.params.id }, {
+        $addToSet: {
+            reviews: review._id
+        }
+    }, { new: true }).populate("reviews orderedBy returns")
 
+    if (user && product) return res.status(200).json({
+        success: true,
+        user,
+        product
+    })
 })
 
 exports.deleteReview = catchAsyncErrors(async (req, res) => {
-    const user = await User.updateOne({
-        username: req.params.username
-    }, {
+
+    const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
         $pull: {
-            review: {
-                _id: req.params.id1
-            }
+            reviews: req.params.reviewID
         }
-    })
-    if (user) res.status(201).json({
+    }, { new: true }).populate("reviews orders addresses")
+
+    const product = await Product.findByIdAndUpdate({ _id: req.params.productID }, {
+        $pull: {
+            reviews: req.params.reviewID
+        }
+    }, { new: true }).populate("reviews orderedBy returns")
+
+    const review = await Review.findByIdAndDelete({ _id: req.params.reviewID })
+    if (user && product) return res.status(200).json({
         success: true,
-        message: 'Review deleted!'
+        user, product
     })
 
-    try
-    {
-        const product = await Product.updateOne({
-            _id: req.params.id
-        }, {
-            $pull: {
-                rating: {
-                    _id: req.params.id2
-                }
-            }
-        })
-        
-        if (product && user) res.status(201).json({
-            success: true,
-            message: 'review Deleted!',
-            product
-        })
-        else res.status(404).json({
-            success: false,
-            message: 'error in deletion!'
-        })
-    
-    }catch(e){}
-    
-    
 })
 
 // checkout
 exports.addOrder = catchAsyncErrors(async (req, res) => {
 
     const dateObj = new Date()
-    for (let i = 0; i < req.body.reviews.length; i++) {
-        const { imageUrl, name, quantity, price, size } = req.body.reviews[i]
-        const user = await User.updateOne({
-            username: req.params.username
-        }, {
-            $push: {
-                order: [{
-                    imageUrl: imageUrl,
-                    name: name,
-                    quantity: quantity,
-                    price: price,
-                    size: size,
-                    dateOfPurchase: {
-                        date: dateObj.getDate(),
-                        month: dateObj.getMonth() + 1,
-                        year: dateObj.getFullYear()
-                    }
-                }]
+    for (let i = 0; i < req.body.products.length; i++) {
+        const { imageUrl, name, price, quantity, size, id } = req.body.products[i]
+
+        const order = await Order.create({
+            imageUrl, name, price, quantity, size,
+            dateOfPurchase: {
+                day: dateObj.getDay(),
+                month: dateObj.getMonth() + 1,
+                year: dateObj.getFullYear()
+            },
+            product: id,
+            user: req.user._id,
+            delivery: req.user.delivery
+        })
+
+        const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
+            $addToSet: {
+                orders: order._id
             }
-        })
-        if (user) res.status(201).json({
-            success: true,
-            message: 'Order Confirmed'
-        })
-        else res.status(404).json({
-            success: false,
-            message: "Error"
-        })
+        }, { new: true }).populate("orders")
+
+        const product = await Product.findByIdAndUpdate({ _id: id }, {
+            $addToSet: { orderedBy: req.user._id }
+        }, { new: true }).populate("orderedBy")
     }
-    try
-    {
-        const product = await Product.updateOne({
-            name: req.params.productName
-        }, {
-            $push: {
-                orderBy: req.params.username
-            }
-        })
-    }
-    catch(e){console.log(e);}
-   
+
+    const user = await User.find({ _id: req.user._id }).populate("orders")
+    res.json({
+        user
+    })
 
 })
 
 exports.removeOrder = catchAsyncErrors(async (req, res) => {
-    const user = await User.updateOne({ username: req.params.username },
-        {
-            $pull: {
-                order: {
-                    _id: req.params.id
-                }
-            }
-        })
-    if (user) res.status(201).json({
+
+    const order = await Order.findByIdAndDelete({ _id: req.params.orderId })
+
+    const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
+        $pull: {
+            orders: req.params.orderId
+        }
+    }, { new: true }).populate("orders")
+
+    const product = await Product.findByIdAndUpdate({ _id: req.params.productId }, {
+        $pull: {
+            orderedBy: req.user._id
+        },
+        $addToSet: {
+            returns: req.params.orderId
+        }
+    }, { new: true }).populate("orderedBy returns")
+
+    if (user && product) return res.status(200).json({
         success: true,
-        message: "Order Cancelled!"
+        user, product
     })
-    else res.status(404).json({
-        success: false,
-        message: "Error in Cancellation of Your Order!"
-    })
+
 })
 
 exports.addReturns = catchAsyncErrors(async (req, res) => {
-    const { imageUrl, name, quantity, price, size } = req.body
-
-    const result = await User.updateOne({
-        username: req.params.username
-    }, {
-        $pull: {
-            order: {
-                imageUrl: imageUrl,
-                name: name,
-                quantity: quantity,
-                price: price,
-                size: size,
-                dateOfPurchase: dateObj
-            }
-        },
-        $push: {
-            return: {
-                imageUrl: imageUrl,
-                name: name,
-                quantity: quantity,
-                price: price,
-                size: size,
-                dateOfPurchase: dateObj
-            }
+    const user = await User.findByIdAndUpdate({ _id: req.user._id }, {
+        $addToSet: {
+            returns: req.params.returnId
         }
+    }, { new: true }).populate("returns")
+
+    const product = await Product.findByIdAndUpdate({ _id: req.params.productId }, {
+        $addToSet: {
+            returns: req.user._id
+        }
+    }, { new: true }).populate("returns")
+
+    if (user && product) return res.status(200).json({
+        success: true,
+        user, product
     })
-    try
-    {
-        await Product.updateOne({
-            name: name
-        }, {
-            $pull: {
-                orderBy: req.params.username
-            },
-            $push: {
-                return: req.params.username
-            }
-        })
-        if (result) res.status(201).json({
-            success: true,
-            message: "Product confirmed for return!",
-            result
-        })
-    }catch(e){}
-    
 })
 
 // delete req
 exports.deleteUser = catchAsyncErrors(async (req, res) => {
-    const user = await User.findByIdAndDelete({ _id: req.params.id })
+    const user = await User.findByIdAndDelete({ _id: req.user._id })
     if (user) res.status(201).json({
         success: true,
         message: 'User Removed'
     })
+    const review = await Review.findByIdAndDelete({ user: req.user._id })
+    const address = await Address.findByIdAndDelete({ user: req.user._id })
+    const order = await Order.findByIdAndDelete({ user: req.user._id })
 })
 
 // get req
 exports.displayUser = catchAsyncErrors(async (req, res) => {
-    const user = await User.findOne({ username: req.params.username })
-    // console.log(req.params.username);
-    if (user) res.status(201).json({
+    const user = await User.findById({ _id: req.user._id })
+        .populate("addresses orders returns active delivery")
+
+    if (user) return res.status(200).json({
         success: true,
         user
     })
-    else res.status(401).json({
+    else return res.status(400).json({
         success: false,
         message: "User Not Found"
     })
 })
 
-exports.getReview = catchAsyncErrors(async (req, res) => {
-    const result = await User.find({
-        review: {
-            $elemMatch: {
-                productName: req.params.product
-            }
-        }
-    })
-    if (result) res.status(201).json({
-        success: true,
-        result: result[0].review
-    })
-    else res.status(401).json({
-        success: false,
-        message: 'ERROR'
-    })
-})
 exports.getAllUsers = catchAsyncErrors(async (req, res) => {
     const user = await User.find()
     if (user) res.status(201).json({
@@ -525,65 +393,84 @@ exports.getAllUsers = catchAsyncErrors(async (req, res) => {
 })
 
 exports.getAddress = catchAsyncErrors(async (req, res) => {
-    const user = await User.find({
-        username: req.params.username
-    })
-
-    if (user) res.status(201).json({
+    const user = await User.find({ _id: req.user._id }).populate("addresses").populate("delivery")
+    if (user) return res.status(200).json({
         success: true,
-        address: user[0].address
+        user
     })
 })
 exports.logoutUser = catchAsyncErrors(async (req, res) => {
-    
-    
+
+
     // on client,also delete the access token
     const cookies = req.cookies
-    if(!cookies.jwt) return res.sendStatus(204)
-    const refreshToken = cookies.jwt
-    
-    // is refreshToken in db
-    // 204: successful but no content
-    const refToken = await RefreshToken.findOne({
-        token:refreshToken
-    })
-    if(!refToken) 
-    {
-        res.clearCookie('jwt',{httpOnly:true})
-        return res.sendStatus(204)
-    }
-   
-    const foundUser = await User.findById({_id:refToken.user})
-    if(!foundUser) return res.sendStatus(403)
-    
-    // delete refreshToken
-    const refDel = await RefreshToken.deleteOne({
-        user:refToken.user
-    })
-  
+    if (!cookies.jwt) return res.sendStatus(204)
+    // const refreshToken = cookies.jwt
+
+    // // is refreshToken in db
+    // // 204: successful but no content
+    // const refToken = await RefreshToken.findOne({
+    //     token:refreshToken
+    // })
+    // if(!refToken) 
+    // {
+    //     res.clearCookie('jwt',{httpOnly:true})
+    //     return res.sendStatus(204)
+    // }
+
+    // const foundUser = await User.findById({_id:refToken.user})
+    // if(!foundUser) return res.sendStatus(403)
+
+    // // delete refreshToken
+    // const refDel = await RefreshToken.deleteOne({
+    //     user:refToken.user
+    // })
+
     // secure : true - only serves on https
-    res.clearCookie('jwt',{httpOnly:true})
+    res.clearCookie('jwt', { httpOnly: true })
     res.status(201).json({
-        succes:true,
-        message:"USER LOGGED OUT"
+        succes: true,
+        message: "USER LOGGED OUT"
     })
 })
 
-exports.setAdmin = catchAsyncErrors(async(req,res)=>{
+exports.setAdmin = catchAsyncErrors(async (req, res) => {
     const user = await User.findByIdAndUpdate({
-        _id:req.params.id
-    },{
-        $set:{
-            isAdmin:true
+        _id: req.params.id
+    }, {
+        $set: {
+            isAdmin: true
         }
     })
-    if(user) res.sendStatus(201)
+    if (user) res.sendStatus(201)
 })
 
-exports.removeAdmin = catchAsyncErrors(async(req,res)=>{
-    const user = await User.findByIdAndUpdate({_id:req.params.id},{
-        $set:{isAdmin:false}
+exports.removeAdmin = catchAsyncErrors(async (req, res) => {
+    const user = await User.findByIdAndUpdate({ _id: req.params.id }, {
+        $set: { isAdmin: false }
     })
-    if(user) res.sendStatus(201)
+    if (user) res.sendStatus(201)
 })
 
+exports.getOrders = catchAsyncErrors(async (req, res) => {
+    const page = req.query.page
+    const num = req.query.limit
+    
+    const order = await Order.find({ user: req.user._id })
+        .limit(num)
+        .skip(page * num)
+    const user = await User.find({_id:req.user._id})
+    if (order) return res.status(200).json({
+        success: true,
+        order,
+        totalPages: Math.ceil((user[0].orders.length)/num)
+    })
+})
+
+exports.getReturns = catchAsyncErrors(async (req, res) => {
+    const user = await User.find({ _id: req.user._id }).populate("returns")
+    if (user) return res.status(200).json({
+        success: true,
+        user
+    })
+})

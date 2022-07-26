@@ -96,19 +96,19 @@ const ProductScreen = ({ available, image, text, price, rate, mrp, id, category1
               fontSize: '15px'
             }}>
               {
-                rate != 0 ? <>
+                rate==0||rate==null?<>Rating not available</>: <>
                   <span>{rate}/5</span> <FaStar style={{
                     color: 'gold',
                     fontSize: '20px',
                     margin: '0 0 0 3%'
                   }} />
-                </> : <>Rating not available</>
+                </> 
               }
 
             </div>
             <div style={{
               padding: '0 0 2% 0'
-            }}>Size:{size}</div>
+            }}>Size:{size==''||size==null?<>No Size</>:<>{size}</>}</div>
           </div></NavLink></div>
       </div>
     </>

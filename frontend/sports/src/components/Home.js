@@ -8,16 +8,19 @@ import Footer from './Footer'
 import Footer2 from './Footer2'
 import ProductSec from './Home-products/ProductSec'
 import { clickAction } from './redux/clickingReducer'
+import { getLocal } from './storeInLocalStorage'
 
 
 
 const Home = () => {
+  
   const [screenWidth, setScreenWidth] = useState(1440)
   const getScreenWidth = () => {
     setScreenWidth(window.innerWidth)
   }
 
   useEffect(() => {
+    
     window.addEventListener('resize', getScreenWidth)
   }, [screenWidth])
 
@@ -49,6 +52,7 @@ const Home = () => {
       <ProductSec text1='Football' text2='equipments' />
       <ProductSec text1='Badminton' text2='products'/>      
       <ProductSec text1='Cricket' text2='products'/>
+      <ProductSec text1='Trecking' text2='goods'/>
     </div>
   </>
   )

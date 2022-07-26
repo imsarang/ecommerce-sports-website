@@ -3,25 +3,23 @@ const RefreshToken = require('../model/refreshTokenModel')
 const User = require('../model/userModel')
 const { generateToken } = require('../utils/generateToken')
 
-exports.authUser = (req,res,next)=>{
+exports.authUser = async(req,res,next)=>{
     let token = req.headers['authorization']
     
     if(!token) return res.status(401)
 
     token = token.split(' ')[1]
-    jwt.verify(token,process.env.ACCESS_JWT_SECRET_KEY,(err,user)=>{
-        if(!err)
-        {
-            req.user = user
-            next()
-        }
-        else
-        // invalid token 
-        res.status(403).json({
+    
+    try{
+        const decoded = jwt.verify(token,process.env.ACCESS_JWT_SECRET_KEY)
+        req.user = await User.findOne({_id:decoded.id}).select("-password")
+        next()
+    }catch(e){
+        return res.status(400).json({
             success:false,
-            message:"LOGIN REQUIRED!"
+            message:"User Not Logged IN!"
         })
-    })
+    }
 
 }
 
@@ -58,13 +56,20 @@ exports.checkAdmin = async(req,res,next)=>{
     const cookies = req.cookies
 
     if(!cookies.jwt) res.sendStatus(401)
-    const refreshToken = cookies.jwt
-    const refToken = await RefreshToken.findOne({token:refreshToken})
-    const foundUser = await User.findOne({_id:refToken.user})
-    if(!refToken) res.sendStatus(403)
+    
+    const token = cookies.jwt
 
-    if(!foundUser.isAdmin) res.status(403).json({
-        message:"ONLY ADMIN ACCESS!"
-    })
-    next()
+    const decoded = jwt.verify(token,process.env.ACCESS_JWT_SECRET_KEY)
+    try{
+        const user = await User.findById({_id:decoded.id})
+        if(user.isAdmin)
+        {
+            next()
+        }
+        else 
+        return res.status(400).json({
+            success:false,
+            message:"Only Admin Has Access"
+        })
+    }catch(e){console.log(e)}
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaAddressBook, FaAddressCard, FaLeaf, FaPlus, FaTrash } from 'react-icons/fa'
 import defaultImage from '../images/defaultImage.png'
 import { category1, category2, category3, category4_1, category4_2, category4_3, category4_4, category4_5 } from '../general'
@@ -9,9 +9,11 @@ import { category1, category2, category3, category4_1, category4_2, category4_3,
 import { storage } from '../firebase/firebase1'
 import defaultPic from '../images/defaultPic.jpg'
 import Loading from '../Loading'
+import { getLocal } from '../storeInLocalStorage'
 
 const AddProducts = ({ setChoice }) => {
 
+  const token = getLocal()
   const [show, setShow] = useState(false)
   const [tempFile, setTempImg] = useState('')
   const [forFirebase, setForFirebase] = useState('')
@@ -41,6 +43,7 @@ const AddProducts = ({ setChoice }) => {
     category4: '',
 
   })
+  
   const handleSubmit1 = (e) => {
     e.preventDefault()
 
@@ -48,11 +51,13 @@ const AddProducts = ({ setChoice }) => {
 
   const addToDataBase = async () => {
     setLoad(true)
+    // console.log(token);
     try {
-      const product = await fetch('api/v2/add', {
+      const product = await fetch('/api/v2/add', {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          Authorization:`Bearer ${token}`,
+          "Content-Type": "application/json",  
         },
         body: JSON.stringify({
           imageUrl: productInfo.imageUrl,
@@ -266,9 +271,10 @@ const AddProducts = ({ setChoice }) => {
                       </div>
 
                       {
-                        productInfo.category2 === "Accessories" ? <></> :
+                        productInfo.category2 === "Accessories"? <></> :
                           <div className='add-category-select-idvl'>
-                            <select
+                            {
+                              productInfo.category3=='Upper' || productInfo.category3=='Lower'?<select
                               maxLength={30}
                               placeholder='Select'
                               name='category4'
@@ -276,7 +282,7 @@ const AddProducts = ({ setChoice }) => {
                               onChange={(e) => handleInputs(e)}
                               className='select-add'
                               required>
-
+                                
                               <option>Category 4</option>
                               {
                                 productInfo.category2 == 'Men' && productInfo.category3 == 'Upper' ?
@@ -300,7 +306,9 @@ const AddProducts = ({ setChoice }) => {
                                             return <option className='select-option'>{item}</option>
                                           }) : <></>
                               }
-                            </select>
+                            </select>:<></>
+                            }
+                            
                           </div>
                       }
 
@@ -381,7 +389,7 @@ const AddProducts = ({ setChoice }) => {
                         <div>Content:</div>
                         <input
                           type='text'
-                          maxLength={50}
+                          maxLength={100}
                           placeholder='Content'
                           name='content1'
                           value={productInfo.content1}
@@ -408,7 +416,7 @@ const AddProducts = ({ setChoice }) => {
                         <label>Content:</label>
                         <input
                           type='text'
-                          maxLength={50}
+                          maxLength={100}
                           placeholder='Content'
                           name='content2'
                           value={productInfo.content2}
@@ -435,7 +443,7 @@ const AddProducts = ({ setChoice }) => {
                         <label>Content:</label>
                         <input
                           type='text'
-                          maxLength={50}
+                          maxLength={100}
                           placeholder='Content'
                           name='content3'
                           value={productInfo.content3}
@@ -462,7 +470,7 @@ const AddProducts = ({ setChoice }) => {
                         <label>Content:</label>
                         <input
                           type='text'
-                          maxLength={50}
+                          maxLength={100}
                           placeholder='Content'
                           name='content4'
                           value={productInfo.content4}
@@ -518,6 +526,7 @@ const AddProducts = ({ setChoice }) => {
                         name='style'
                         value={productInfo.style}
                         onChange={(e) => handleInputs(e)}
+                        maxLength={100}
                         className='tech-input' />
                       </div>
                     </div>

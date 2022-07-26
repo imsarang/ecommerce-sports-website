@@ -18,6 +18,7 @@ const CartItems = ({name,price,image,quantity,available,rating,id,handleTrash,ha
             size:size
           }))
     }
+    
     return (
     <div className='items'>
                         <div className='items-image' onClick={handleClick}>

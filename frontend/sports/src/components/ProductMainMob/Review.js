@@ -30,7 +30,7 @@ const Review = ({rating,id,productName}) => {
   let count5 = 0
     const result = await fetch(`/api/v2/product/${id}`)
     const product = await result.json()
-    product.product.rating.map((item)=>{
+    product.product.reviews.map((item)=>{
       
   
       
@@ -42,14 +42,15 @@ const Review = ({rating,id,productName}) => {
 
       if(item.recommend)count++
     })
-    setAverage(product.product.avgRate)
+    setAverage(product.product.avgRate) 
     const rateCount = [count5,count4,count3,count2,count1]
     setRateCount(rateCount)
     setRecommend(count)
-    setPeople(product.product.rating.length)
+    setPeople(product.product.reviews.length)
   }
   useEffect(()=>{
     showRating()
+    console.log(rating);
   },[])
   const [rateCount,setRateCount] = useState([])
   const [average,setAverage] = useState(0)

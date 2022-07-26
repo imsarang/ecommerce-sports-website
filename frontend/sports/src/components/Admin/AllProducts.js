@@ -1,95 +1,80 @@
 import React, { useEffect, useState } from 'react'
-import { FaPlus, FaTrash } from 'react-icons/fa'
+import { FaCaretLeft, FaCaretRight, FaPlus, FaTrash } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { storage } from '../firebase/firebase1'
 import Loading from '../Loading'
+import '../styles/allProducts.css'
+import ProductCard from './ProductCard'
+const AllProducts = ({token}) => {
 
-const AllProducts = ({ image, name, size, price, category1, category2, available, id ,load,setLoad}) => {
+  const [allProducts,setAllProducts] = useState([])
+  const [load,setLoad] = useState(false)
+  const [page,setPage] = useState(0)
+  const [totalPages,setTotalPages] = useState()
+  const [pageArr,setPageArr] = useState([])
+  useEffect(()=>{
+    showAllProducts()
+  },[page])
 
-  const [show, setShow] = useState(false)
-  const navigate = useNavigate()
-  // const [load,setLoad]=  useState(false)
-  const handleCancel = () => {
-    setShow(false)
-  }
-  const handleYes = async()=>{
+  const showAllProducts =async()=>{
     setLoad(true)
-    const result = await fetch(`/api/v2/delete/${id}`,{
-      method:"DELETE"
+    const result = await fetch(`/api/v2/display/pagination?page=${page}&limit=${6}`,{
+      method:"GET",
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
     })
     const product = await result.json()
     
-    // deleting image from firebase
-    const fileUrl = image
-    const fileRef = storage.refFromURL(fileUrl)
-    fileRef.delete().then(function(){console.log(`File Deleted`);}).catch(function(e){console.log(e);})
-    setShow(false)
-    setLoad(false)
-    navigate('/')
+    if(product.success){
+      setAllProducts(product.product)
+      setTotalPages(product.totalPages)
+      let arr = new Array(product.totalPages).fill(0)
+      setPageArr(arr)
+      setLoad(false)
+    }
   }
-  const handleNo = ()=>{
-    setShow(false)
+  
+  const handlePagePrev = ()=>{
+    if(page != 0) setPage(page-1)
+  }
+  const handlePageNext = ()=>{
+    if(page!=totalPages-1) setPage(page+1)
+  }
+  const handleViewPage = (index)=>{
+    setPage(index)
   }
   if(load) return <Loading/>
   return (<>
-    <div className='admin-all'>
-      <div className='main-admin-order'>
-        <div className='admin-order-image-all'>
-          <img className='admin-img-tag' src={image} />
-        </div>
-        <div className='admin-order-content'>
-          <div className='admin-order-name'>
-            {name}
+  <div className='indicator-div'>
+    <div className='go-prev-div'><button id='go-prev' onClick={handlePagePrev}><FaCaretLeft/></button></div>
+    <div className='indicator-btns'>
+      {
+        pageArr.map((item,index)=>{
+          return <div id='indicator-btn' onClick={()=>handleViewPage(index)}>
+            <button id={page == index?'ind-btn-1':'ind-btn-2'}>{index+1}</button>
           </div>
-          <div className='admin-order-content-2'>
-            <div className='admin-order-size'>Size:<span className='admin-sep'>{size}</span></div>
-            <div className='admin-order-quantity'>Available:<span className='admin-sep'>{available}</span>U</div>
-            <div className='admin-order-price'>Price:<span className='admin-sep'>Rs.{price}</span></div>
-          </div>
-          <div className='admin-order-user'>
-            Category:<span className='admin-sep'>{category1}</span><span className='admin-sep'>{category2}</span>
-          </div>
-        </div>
-        <div className='admin-trash'>
-          <FaTrash style={{ margin: '4% 4% 0 0', cursor: 'pointer' }}
-            onClick={() => setShow(true)} />
-        </div>
-      </div>
+        })
+      }
     </div>
-    {
-      show ? <>
-        <div className='remove-admin-modal'>
-          <div className='admin-modal-main'>
-            <div className='admin-modal-cancel' onClick={handleCancel}>
-              <FaPlus style={{ 
-                transform: 'rotate(45deg)', 
-                fontSize: '20px', 
-                cursor: 'pointer',
-                margin:'2% 2% 0 0' 
-                }} />
-            </div>
-            <div className='admin-modal-content'>
-              <div className='modal-remove-heading'>Are you sure you want to remove this product?</div>
-              <div className='admin-modal-content-main'>
-                <div className='admin-image-1'>
-                  <img src={image} className='modal-image' />
-                </div>
-                <div className='admin-modal-content-3'>
-                  <div style={{ fontWeight: 'bold' }}>{name}</div>
-                  <div>Available:<span className='admin-sep'>{available}U</span></div>
-                  <div>Price:<span className='admin-sep'>Rs.{price}</span></div>
-                  <div>Size:<span className='admin-sep'>{size}</span></div>
-                </div>
-              </div>
-            </div>
-            <div className='modal-choice'>
-              <div style={{width:'100%',padding:'0 1% 0 0'}} onClick={handleYes}><button className='modal-btns-1'>Yes</button></div>
-              <div style={{width:'100%',padding:'0 0 0 1%'}} onClick={handleNo}><button className='modal-btns-2'>No</button></div>
-            </div>
-          </div>
-        </div>
-      </> : <></>
-    }
+    <div className='go-next-div'><button id='go-next' onClick={handlePageNext}><FaCaretRight/></button></div>
+  </div>
+  <div className='all-products-grid'>
+    {allProducts.map((item)=>{
+      return <div className='item-all'><ProductCard image={item.imageUrl}
+      name={item.name}
+      available={item.maxAvailable}
+      price={item.price}
+      size={item.size1}
+      category1={item.category.category1}
+      category2={item.category.category2}
+      id={item._id} 
+      load={load}
+      setLoad={setLoad}
+      token={token}
+      order={false}/></div>
+    })}
+    </div>
   </>
   )
 }

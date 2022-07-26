@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
 const userSchema = new mongoose.Schema({
     firstname:{
         type:String,
@@ -21,73 +23,28 @@ const userSchema = new mongoose.Schema({
     },
     gender:{type:String},
     active:{
-        firstname:{type:String},
-        lastname:{type:String},
-        contact:{type:String,maxlength:10},
-        address1:{type:String},
-        address2:{type:String},
-        address3:{type:String},
-        pincode:{type:Number},
-        city:{type:String},
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Address"
     },
     delivery:{
-        firstname:{type:String},
-        lastname:{type:String},
-        contact:{type:String,maxlength:10},
-        address1:{type:String},
-        address2:{type:String},
-        address3:{type:String},
-        pincode:{type:Number},
-        city:{type:String},
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Address"
     },
-    address:[{
-        firstname:{type:String,required:true},
-        lastname:{type:String,required:true},
-        contact:{type:String,maxlength:10},
-        address1:{type:String},
-        address2:{type:String},
-        address3:{type:String},
-        pincode:{type:Number},
-        city:{type:String},
-        // active:{type:Boolean}
-    },],
-    order:[{
-        imageUrl:{type:String},
-        name:{type:String},
-        quantity:{type:Number},
-        price:{type:Number},
-        size:{type:String},
-        dateOfPurchase:{
-            day:{type:Number,required:true},
-            month:{type:Number,required:true},
-            year:{type:Number,required:true}
-        }
+    addresses:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Address"
     }],
-    return:[{
-        imageUrl:{type:String},
-        name:{type:String},
-        quantity:{type:Number},
-        price:{type:Number},
-        size:{type:String},
-        dateOfPurchase:{type:Date,required:true}
+    orders:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Order"
     }],
-    review:[{
-        rate:{type:Number,required:true},
-        title:{type:String},
-        comment:{type:String},
-        recommend:{type:Boolean},
-        used_since:{type:String},
-        email:{type:String,required:true},
-        firstname:{type:String},
-        lastname:{type:String},
-        userGender:{type:String},
-        age:{type:String},
-        productName:{type:String,required:true},
-        dateOfReview:{
-            day:{type:Number,required:true},
-            month:{type:Number,required:true},
-            year:{type:Number,required:true}
-        }
+    returns:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Order"
+    }],
+    reviews:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Review"
     }]
 })
 
@@ -97,8 +54,11 @@ userSchema.pre('save',async function(next){
         const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password,salt)
     }
-    next()
-    
-    
+    next() 
 })
+userSchema.methods.generateToken = async function(){
+    return await jwt.sign({id:this.id},process.env.ACCESS_JWT_SECRET_KEY,{
+        expiresIn:process.env.ACCESS_JWT_EXPIRES_IN
+    })
+}
 module.exports = mongoose.model("User",userSchema)

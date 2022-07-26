@@ -24,21 +24,26 @@ const Category = () => {
   }, [category])
 
   const [myProducts,setProducts] = useState([])
-  // const [items1,setItems1] = useState([])
-  // const [items2,setItems2] = useState([])
-  // const [items3,setItems3] = useState([])
-  // const [items4,setItems4] = useState([])
+  const [items1,setItems1] = useState([])
+  const [items2,setItems2] = useState([])
+  const [items3,setItems3] = useState([])
+  const [items4,setItems4] = useState([])
   // const [items1,setItems1] = useState([])
   // get all products from database
-  let items1=[]
-  let items2=[]
-  let items3=[]
-  let items4 = []
+  // let items1=[]
+  // let items2=[]
+  // let items3=[]
+  // let items4 = []
   const handleProductsFromDatabase = async() => {
-    const result = await fetch(`/api/v2/show/${category}`)
-    const product = await result.json()
-
-    if(product.success)
+    const result1 = await fetch(`/api/v2/category?category1=${category}&category2=Accessories`)
+    const result2 = await fetch(`/api/v2/category?category1=${category}&category2=Men`)
+    const result3 = await fetch(`/api/v2/category?category1=${category}&category2=Women`)
+    const result4 = await fetch(`/api/v2/category?category1=${category}&category2=Kids`)
+    const product1 = await result1.json()
+    const product2 = await result2.json()
+    const product3 = await result3.json()
+    const product4 = await result4.json()
+    if(product1.success && product2.success && product3.success && product4.success)
     {
       // product.product.map((item)=>{
       //   // console.log(item);
@@ -48,22 +53,25 @@ const Category = () => {
       //   item.category.category1===category && item.category.category2 === 'Kids'?setItems1([...items4,item]):
       //   console.log('hi');
       // })
-      setProducts(product.product)
+      setItems1(product1.product)
+      setItems2(product2.product)
+      setItems3(product3.product)
+      setItems4(product4.product)
+      console.log(product1);
     }
-    console.log(product.product);
   }
  
-  myProducts.map((item)=>{console.log(item);
-    // x.map((item)=>{
-      if(item.category.category1 === category&&item.category.category2 === 'Accessories') 
-      items1.push(item)
-      // setItems1([...items1,item])
-      if(item.category.category1 === category&&item.category.category2 === 'Men') items2.push(item)
-      if(item.category.category1 === category&&item.category.category2 === 'Women') items3.push(item)
-      if(item.category.category1 === category&&item.category.category2 === 'Kids') items4.push(item)
-    // })
+  // myProducts.map((item)=>{console.log(item);
+  //   // x.map((item)=>{
+  //     if(item.category.category1 === category&&item.category.category2 === 'Accessories') 
+  //     items1.push(item)
+  //     // setItems1([...items1,item])
+  //     if(item.category.category1 === category&&item.category.category2 === 'Men') items2.push(item)
+  //     if(item.category.category1 === category&&item.category.category2 === 'Women') items3.push(item)
+  //     if(item.category.category1 === category&&item.category.category2 === 'Kids') items4.push(item)
+  //   // })
 
-  })
+  // })
 
   return (
     <div style={{

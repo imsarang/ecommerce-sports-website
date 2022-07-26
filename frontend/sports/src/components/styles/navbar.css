@@ -55,7 +55,12 @@
     display:block;
     font-family: 'Roboto';
 }
-
+#rem-search{
+    font-size:12px;
+    transform: rotate(45deg);
+    margin:0 1% 0 0;
+    cursor: pointer;
+}
 @media screen and(max-width:860px){
     .nav-bar,.navbar-brand,.navbar-user,.navbar-cart{
         display:inline-flexbox;

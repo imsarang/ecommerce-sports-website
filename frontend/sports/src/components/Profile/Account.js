@@ -3,15 +3,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import InfoModal from '../Info/InfoModal'
 import { CLICK_SIGNIN } from '../redux/clickingReducer'
-import { phone, username, USER_LOGIN, USER_USERNAME } from '../redux/userReducer'
+import { phone, username, USER_LOGIN, USER_LOGOUT, USER_USERNAME } from '../redux/userReducer'
+import { getLocal, removeLocal } from '../storeInLocalStorage'
 import '../styles/account.css'
 import { userAddress } from '../traildata'
 import Address from './Address'
 import AllUsers from './AllUsers'
 import OrdersReturns from './OrdersReturns'
 import Profile from './Profile'
+import Returns from './Returns'
 
 const Account = () => {
+
+    const token = getLocal()
+
     const contact = useSelector(phone)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -21,6 +26,7 @@ const Account = () => {
     const [profile, setProfile] = useState(true)
     const [returns, setReturns] = useState(false)
     const [address, setAddress] = useState(false)
+    const [orders,setOrders] = useState(false)
     const [users,setUsers] = useState(false)
 
     const [showActive, setShowActive] = useState(false)
@@ -44,8 +50,13 @@ const Account = () => {
 
     const showUserFromDatabase = async () => {
         setLoad(true)
-        const res = await fetch(`api/v1/show/${user_name}`)
-        console.log(user_name);
+        const res = await fetch(`api/v1/show`,{
+            method:"GET",
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        })
+       
         const user = await res.json()
         if (user.success) {
             setInfo({
@@ -66,12 +77,14 @@ const Account = () => {
     }
 
     const handleLogout = async() => {
-        dispatch(USER_LOGIN({}))
+        dispatch(USER_LOGOUT({}))
         
         await fetch(`api/v1/logout`)
         dispatch(USER_USERNAME({
             username: null
         }))
+        localStorage.removeItem("token")
+        localStorage.removeItem("expire")
         navigate('/')
     }
     const handleProfile = () => {
@@ -79,18 +92,21 @@ const Account = () => {
         setAddress(false)
         setReturns(false)
         setUsers(false)
+        setOrders(false)
     }
     const handleAddress = () => {
         setAddress(true)
         setProfile(false)
         setReturns(false)
         setUsers(false)
+        setOrders(false)
     }
     const handleOrders = () => {
-        setReturns(true)
+        setOrders(true)
         setAddress(false)
         setProfile(false)
         setUsers(false)
+        setReturns(false)
     }
 
     const handleShowUsers = ()=>{
@@ -98,7 +114,15 @@ const Account = () => {
         setReturns(false)
         setAddress(false)
         setProfile(false)
+        setOrders(false)
         
+    }
+    const handleReturns=()=>{
+        setUsers(false)
+        setReturns(true)
+        setAddress(false)
+        setProfile(false)
+        setOrders(false)
     }
     return (
         <div className='myaccount'>
@@ -108,10 +132,16 @@ const Account = () => {
                         {info.contact}
                     </div>
                 </div>
-                <div className={returns ? 'index-con2' : 'index-con1'}
+                <div className={orders ? 'index-con2' : 'index-con1'}
                     onClick={handleOrders}>
                     <div className='index-item'>
-                        Orders and returns
+                        Orders
+                    </div>
+                </div>
+                <div className={returns ? 'index-con2' : 'index-con1'}
+                    onClick={handleReturns}>
+                    <div className='index-item'>
+                        Returns
                     </div>
                 </div>
                 <div className={profile ? 'index-con2' : 'index-con1'}
@@ -168,16 +198,24 @@ const Account = () => {
                         setShowNew={setShowNew}
                         load={load}
                         setLoad={setLoad}/>
-                    </> : returns ? <><OrdersReturns 
+                    </> : orders ? <><OrdersReturns 
                     showCancel={showCancel}
                     setShowCancel={setShowCancel}
                     setSeconds={setSeconds}
                     setProfile={setProfile}
-                    setReturns={setReturns}
+                    setOrderSelect={setOrders}
                     load={load}
                     setLoad={setLoad}/>
                     </> :
-                    users?<><AllUsers/></>: <><Profile
+                    users?<><AllUsers/></>: 
+                    returns?<><Returns
+                    showCancel={showCancel}
+                    setShowCancel={setShowCancel}
+                    setSeconds={setSeconds}
+                    setProfile={setProfile}
+                    setReturnSelect={setReturns}
+                    load={load}
+                    setLoad={setLoad}/></>:<><Profile
                         firstname={info.firstname}
                         lastname={info.lastname}
                         username={user_name}

@@ -12,20 +12,24 @@ const userReducer = createSlice({
   initialState,
   reducers: {
       'USER_LOGIN':(state)=>{
-          state.login = !state.login
+          state.login = true
       },
       'USER_CONTACT':(state,action)=>{
           state.phone = action.payload.phone 
       },
       'USER_ADMIN':(state)=>{
-          state.admin = !state.admin
+          state.admin = true
       },
       'USER_USERNAME':(state,action)=>{
             state.username = action.payload.username
+      },
+      'USER_LOGOUT':state=>{
+        state.login=false
+        state.admin=false
       }
 }});
 
-export const {USER_USERNAME,USER_LOGIN,USER_CONTACT,USER_ADMIN} = userReducer.actions
+export const {USER_LOGOUT,USER_USERNAME,USER_LOGIN,USER_CONTACT,USER_ADMIN} = userReducer.actions
 
 export default userReducer.reducer
 export const login = (state)=>state.user.login

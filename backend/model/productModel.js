@@ -8,7 +8,6 @@ const productSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
     },
     price: {
         type: Number,
@@ -31,23 +30,6 @@ const productSchema = new mongoose.Schema({
     },
     size1: { type: String },
     avgRate:{type:Number},
-    rating: [{
-        rate:{type: Number},
-        email:{type:String},
-        title:{type:String},
-        comment:{type:String},
-        firstname:{type:String},
-        lastname:{type:String},
-        userGender:{type:String},
-        age:{type:String},
-        recommend:{type:Boolean},
-        dateOfReview:{
-            day:{type:Number,},
-            month:{type:Number,},
-            year:{type:Number,}
-        },
-        used_since:{type:String}
-}],
     advantage: {
         advantage1: {
             heading: {
@@ -113,8 +95,9 @@ const productSchema = new mongoose.Schema({
             type: String
         }
     },
-    orderBy:[{type:String}],
-    return:[{type:String}]
+    reviews: [{type:mongoose.Schema.Types.ObjectId,ref:"Review"}],
+    orderedBy:[{type:mongoose.Schema.Types.ObjectId,ref:"User"}],
+    returns:[{type:mongoose.Schema.Types.ObjectId,ref:"User"}]
 })
 
 module.exports = mongoose.model("Product", productSchema)

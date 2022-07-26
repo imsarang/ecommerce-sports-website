@@ -26,7 +26,7 @@ const Technical = ({ gender, surface_cover, quantity, size, pro_style, material,
         </div>:<></>
         }
 
-        {
+        {surface_cover!=null&&surface_cover!=''?
           gender!='Accessories'?
           <div style={{padding:'0 0 1% 0'}}>
           <div style={{
@@ -39,7 +39,7 @@ const Technical = ({ gender, surface_cover, quantity, size, pro_style, material,
             fontWeight: 'bold'
           }}>{surface_cover}
           </div>
-        </div>:<></>
+        </div>:<></>:<></>
         }
 
         <div style={{padding:'0 0 1% 0'}}>
@@ -64,11 +64,13 @@ const Technical = ({ gender, surface_cover, quantity, size, pro_style, material,
           <div style={{
             fontFamily: 'Roboto Condensed',
             fontWeight: 'bold'
-          }}>{size}
+          }}>{size!=null || size!=''?<>{size}</>:<>*</>}
           </div>
         </div>
       
-        <div style={{padding:'0 0 1% 0'}}>
+        {
+          pro_style!=null && pro_style!=''?
+          <div style={{padding:'0 0 1% 0'}}>
           <div style={{
             fontFamily: 'Bebas Neue',
             fontSize: '20px'
@@ -79,9 +81,12 @@ const Technical = ({ gender, surface_cover, quantity, size, pro_style, material,
             fontWeight: 'bold'
           }}>{pro_style}
           </div>
-        </div>
+        </div>:<></>
+        }
 
-        <div style={{padding:'0 0 1% 0'}}>
+        {
+          material!=null && material!=""?
+          <div style={{padding:'0 0 1% 0'}}>
           <div style={{
             fontFamily: 'Bebas Neue',
             fontSize: '20px'
@@ -92,7 +97,8 @@ const Technical = ({ gender, surface_cover, quantity, size, pro_style, material,
             fontWeight: 'bold'
           }}>{material}
           </div>
-        </div>
+        </div>:<></>
+        }
 
         <div style={{padding:'0 0 1% 0'}}>
           <div style={{
@@ -107,7 +113,9 @@ const Technical = ({ gender, surface_cover, quantity, size, pro_style, material,
           </div>
         </div>
 
-        <div style={{padding:'0 0 1% 0'}}>
+        {
+          storage!=null && storage!=''?
+          <div style={{padding:'0 0 1% 0'}}>
           <div style={{
             fontFamily: 'Bebas Neue',
             fontSize: '20px'
@@ -118,8 +126,9 @@ const Technical = ({ gender, surface_cover, quantity, size, pro_style, material,
             fontWeight: 'bold'
           }}>{storage}
           </div>
-        </div>
+        </div>:<></>
 
+        }
         <div style={{padding:'0 0 1% 0'}}>
           <div style={{
             fontFamily: 'Bebas Neue',

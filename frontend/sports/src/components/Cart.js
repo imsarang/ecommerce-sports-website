@@ -5,9 +5,11 @@ import { CLICK_CHANGE_ADDRESS, CLICK_SIGNIN, pincode } from './redux/clickingRed
 import { NavLink, useNavigate } from 'react-router-dom'
 import './styles/cart.css'
 
-import { DECREMENT, INCREMENT, productArray, REMOVE_PRODUCT, total } from './redux/cartReducer'
+import { DECREMENT, INCREMENT, LAST_CART_CLICK, productArray, REMOVE_PRODUCT, total } from './redux/cartReducer'
 import CartItems from './CartItems'
-import { username } from './redux/userReducer'
+import { login, username } from './redux/userReducer'
+import EmptyCart from './Info/EmptyCart'
+
 const Cart = () => {
 
 
@@ -17,14 +19,16 @@ const Cart = () => {
     const pin = useSelector(pincode)
     const itemArray = useSelector(productArray)
     const user_name = useSelector(username)
+    const loggedIN = useSelector(login)
     const sum = useSelector(total)
     const dispatch = useDispatch()
+
     const handleChange = () => {
         dispatch(CLICK_CHANGE_ADDRESS())
     }
-
+    
     const handleCheckout = () => {
-        if (!user_name) dispatch(CLICK_SIGNIN())
+        if (!loggedIN) dispatch(CLICK_SIGNIN())
         else history('/checkout')
     }
 
@@ -47,7 +51,9 @@ const Cart = () => {
             price: price,
             quantity: quantity
         }))
+        dispatch(LAST_CART_CLICK({}))
     }
+    if(itemArray.length==0) return <><EmptyCart/></>
     return (
         <div style={{ padding: '7% 0 0 0' }}>
             <div className='cart'>

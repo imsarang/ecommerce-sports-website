@@ -7,12 +7,15 @@ import { age } from '../general'
 import { username } from '../redux/userReducer'
 import { useNavigate } from 'react-router-dom'
 import Loading from '../Loading'
+import { getLocal } from '../storeInLocalStorage'
 const color = {
   gold:'gold',
   grey:'grey'
 }
 
 const ReviewForm = ({id,setReviewModal,productName,handleStage}) => {
+
+  const token = getLocal()
 
   const [goToNext,setNext] = useState(false)
   const user_name = useSelector(username)
@@ -29,7 +32,6 @@ const ReviewForm = ({id,setReviewModal,productName,handleStage}) => {
     age:'',
   })
   const rateArr = [1,2,3,4,5]
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [hoverValue,setHoverValue] = useState(undefined)
   const [load,setLoad] = useState(false)
@@ -58,9 +60,10 @@ const ReviewForm = ({id,setReviewModal,productName,handleStage}) => {
     setLoad(true)
     const {rating,title,comment,recommend,used_since,email,firstname,lastname,gender,age} = reviewContent
       try{
-        const result = await fetch(`/api/v1/add-review/${user_name}/${id}`,{
+        const result = await fetch(`/api/v1/add-review/${id}`,{
           method:"PUT",
           headers:{
+            Authorization:`Bearer ${token}`,
             "Content-Type":"application/json"
           },
           body:JSON.stringify({

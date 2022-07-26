@@ -60,7 +60,7 @@ const Slider = ({ items }) => {
                                 image={item.imageUrl}
                                 name={item.name}
                                 price={item.price}
-                                rating={item.rating} 
+                                rating={item.avgRate} 
                                 id={item._id}
                                 available={item.maxAvailable}
                                 category1={item.category1}

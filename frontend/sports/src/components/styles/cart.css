@@ -191,6 +191,24 @@
     padding:0 0 0 10%
 }
 
+.empty-image{
+    display:flex;
+    justify-content: center;
+}
+.redirect-div{
+    display: flex;
+    justify-content: center;
+}
+#click-home-btn{
+    padding:1% 2%;
+    font-family: 'Bebas Neue';
+    border:none;
+    background-color: #349beb;
+}
+#click-home-btn:hover{
+    background-color: gold;
+    transition: 0.5s;
+}
 @media screen and (max-width:650px){
     .cart{
         display: block;

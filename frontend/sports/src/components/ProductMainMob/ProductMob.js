@@ -13,7 +13,7 @@ import '../styles/product.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { product } from '../redux/productReducer'
 import { CLICK_CHANGE_ADDRESS, CLICK_SIZE_CHART, sizechart } from '../redux/clickingReducer'
-import { ADD_TO_CART } from '../redux/cartReducer'
+import { ADD_TO_CART, CART_NOTIF, LAST_CART_CLICK } from '../redux/cartReducer'
 import SizeChart from '../ProductMain/SizeChart'
 const ProductMob = () => {
   const myArrHead = [['Chlorine resistance','Benefit from minimum of 100 hours of chlorine resistance from this swimsuit.'],
@@ -47,7 +47,7 @@ const mystyle1={
 const showProductFromDatabase = async()=>{
   const result = await fetch(`/api/v2/product/${id}`)
   const product =await result.json()
-  const {_id,name,imageUrl,price,mrp1,maxAvailable,size1,category,technical,advantage,rating,avgRate} = product.product
+  const {_id,name,imageUrl,price,mrp1,maxAvailable,size1,category,technical,advantage,reviews,avgRate} = product.product
   if(product.success)
   {
     // console.log(id);
@@ -69,7 +69,7 @@ const showProductFromDatabase = async()=>{
       advantages:advantage,
       avgRate:avgRate
     })
-    setForReview([...review,rating])
+    setForReview([...review,reviews])
   }
 }
 useEffect(()=>{
@@ -90,6 +90,7 @@ const handleAddToCart = ()=>{
     available:item.available,
     size:item.size
   }))
+  dispatch(CART_NOTIF({}))
 }
 
 const handleSize=()=>{
