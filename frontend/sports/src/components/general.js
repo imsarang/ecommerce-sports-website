@@ -29,7 +29,7 @@ export const category1=['Trecking','Wildlife','Skiing',
 'Carrom','Golf','Archery','Cycling','Roller']
 
 export const category2=['Men','Women','Kids','Accessories']
-export const category3=['Upper','Lower','Shoes','Gloves','Bag','Socks','Bat','Ball','Racquet','Net']
+export const category3=['Upper','Lower','Shoes','Gloves','Bag','Socks','Bat','Ball','Racquet','Net','cycle']
 export const category4_1 = ['Jacket','T-Shirt','Inners','Shirt','Jersey','SleeveLess']
 export const category4_2 = ['Undergarments','Boxers','Jeans','Pants','Track Pants','Shorts']
 export const category4_3 = ['Jacket','T-Shirt','Shirt','Bra','Jersey']

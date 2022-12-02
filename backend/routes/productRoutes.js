@@ -1,5 +1,5 @@
 const express = require('express')
-const { addProduct, getProducts, removeProducts, getProductReview, getProductByCategory, getAllOrders, getProductById, addProductQuantity, removeProductQuantity, calculateRating, getProductByCategory1And2, getAllReturns, searchProducts, displayPagination, searchSections, mainSearchPage} = require('../controller/productController')
+const { addProduct, getProducts, removeProducts, getProductReview, getProductByCategory, getAllOrders, getProductById, addProductQuantity, removeProductQuantity, calculateRating, getProductByCategory1And2, getAllReturns, searchProducts, displayPagination, searchSections, mainSearchPage, allProductCategory} = require('../controller/productController')
 const { authUser, checkAdmin } = require('../middleware/authenticate')
 const router = express.Router()
 
@@ -17,6 +17,7 @@ router.route('/category').get(getProductByCategory1And2)
 router.route('/product/rate/:id').put(calculateRating)
 router.route('/search/product/').get(searchProducts)
 router.route('/search/section/').get(searchSections)
-router.route('/search/main/:category/:category1/:category2/:category3/:category4/:category5').get(mainSearchPage)    
+router.route('/search/main/:category1/:category2').get(mainSearchPage)
+router.route('/search/main/:category').get(allProductCategory)    
 router.route('/display/pagination').get(authUser,checkAdmin,displayPagination)
 module.exports = router

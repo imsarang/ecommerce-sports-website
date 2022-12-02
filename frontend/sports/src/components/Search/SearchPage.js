@@ -18,11 +18,12 @@ const SearchPage = () => {
   const [kids,setKids] = useState(false)
   const [acc,setAcc] = useState(false)
   const [all,setAll] = useState(false)
-
+  const [totalPages,setTotalPages] = useState()
+  const [sort,setSort] = useState('highlow')
   
   useEffect(()=>{
     handleCat1()
-  },[])
+  },[category,section,sort])
 
   const handleCat1 = ()=>{
     // const {men,women,kids,acc,all} = cat1
@@ -50,7 +51,7 @@ const SearchPage = () => {
             men={men}women={women}kids={kids}acc={acc}all={all}/>
           </div>
           <div className='search-category3'>
-            filter category3
+            {/* filter category3 */}
           </div>
         </div>
         <div className='search-page-content'>
@@ -59,14 +60,16 @@ const SearchPage = () => {
               <button id='sort-btn' onClick={handleClickSorting}>Sorting</button>
             </div>
             {
-              showDropdown?<div id='sort-dropdown'><DropDown/></div>:<></>
+              showDropdown?<div id='sort-dropdown'><DropDown setSort={setSort} sort={sort}/></div>:<></>
             }
             <div className='search-page-result'>
-              Showing 1-16 of /total/ results 
+              {/* Showing 1-{totalPages}of /total/ results  */}
             </div>
           </div>
           <div className='search-page-products'>
-            <SearchProducts men={men} women={women} kids={kids} acc={acc} all={all} category={category}/>
+            <SearchProducts men={men} women={women} kids={kids} acc={acc} all={all} category={category} minPrice={minPrice} maxPrice={maxPrice}
+            setTotalPages = {setTotalPages}
+            sort={sort}/>
           </div>
         </div>
     </div>

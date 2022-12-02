@@ -1,3 +1,4 @@
+// Footer component common for all
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { AddIcon } from './AddedInfo/AddedInfoPart'

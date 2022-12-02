@@ -133,8 +133,18 @@
     font-family:"Oswald";
     cursor: pointer;
 }
+#current-drop{
+    background-color: gold;
+    border-radius: 5px;
+    padding:5%;
+    margin:2% 0 0 0;
+    font-family:"Oswald";
+    cursor: pointer;
+}
 #low-high:hover,#high-low:hover,#sort-rating:hover{
-    background-color: #e8e9eb;
+    background-color: #1b1b1c;
+    color:white;
+    transition: 0.5s;
 }
 .search-page-result{
     font-family: "Bebas Neue";
@@ -207,4 +217,45 @@ input[type='number']::-webkit-inner-spin-button{
 .filter-cat1{
    font-family: 'Oswald';
    padding:3% 5% 0 0;
+} 
+.search-main-products{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    width:100%;
+}
+
+.search-card{
+    /* width:100%; */
+    padding:4%;
+    border-radius: 10px;
+    margin:5px 5px 5px 5px;
+    border: 1px solid black;
+    height:99%;
+    width:99%;
+    cursor: pointer;
+}
+.search-main-image{
+    width:100%;
+}
+#search-img-tag{
+    width:100%
+}
+#search-name,#search-size,#search-qty,#search-price,#search-rating{
+    font-family: "Oswald";
+}
+#search-price{
+    background-color: gold;
+    width:40%;
+    clip-path: polygon(0 0,90% 0,100% 100%,0 100%);
+    margin:3% 0 0 0;
+}
+#search-rating{
+    position: absolute;
+    background-color: #666667;
+    width:40px;
+    /* top:0; */
+    clip-path: polygon(0 0,90% 0,100% 100%,0 100%);
+    margin:3% 0 0 0;
+    padding:4px;
+    color:white;
 }

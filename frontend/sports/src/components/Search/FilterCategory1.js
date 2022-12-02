@@ -5,18 +5,26 @@ const FilterCategory1 = ({setMen,setWomen,setKids,setAcc,setAll,men,women,kids,a
 
     const handleChange1 = (e)=>{
         setMen(!men)
+        setAll(false)
     }
     const handleChange2 = (e)=>{
         setWomen(!women)
+        setAll(false)
     }
     const handleChange3 = (e)=>{
         setKids(!kids)
+        setAll(false)
     }
     const handleChange4 = (e)=>{
         setAcc(!acc)
+        setAll(false)
     }
     const handleChange5 = (e)=>{
         setAll(!all)
+        setMen(false)
+        setWomen(false)
+        setKids(false)
+        setAcc(false)
     }
   return (
     <div className='filter-1'>
